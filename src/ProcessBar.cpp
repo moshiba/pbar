@@ -7,7 +7,7 @@
 namespace log {
 
 ProcessBar::ProcessBar(std::string description, int max_num)
-    : description(description), max_num(max_num), cur_num(0), divider(" => ") {}
+    : description(description), divider(" => "), max_num(max_num), cur_num(0) {}
 
 float ProcessBar::percentage() {
     return float(this->cur_num) / float(this->max_num) * 100.0;
