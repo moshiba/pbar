@@ -5,26 +5,24 @@
 #ifndef CPP_LOGGER_LOGGER_H
 #define CPP_LOGGER_LOGGER_H
 
-#include <string>
 #include <cstdio>
 #include <iostream>
+#include <string>
 
 namespace log {
-    enum LEVEL {
-        DEBUG = 0,
-        INFO = 1,
-        WARNING = 2,
-        ERROR = 3
-    };
 
-    class Logger {
-    private:
-        std::string name;
-        static LEVEL level;
-    public:
-        Logger(std::string name = "default");
-        static void setLevel(LEVEL level);
-    };
-}
+enum LEVEL { DEBUG = 0, INFO = 1, WARNING = 2, ERROR = 3 };
 
-#endif //CPP_LOGGER_LOGGER_H
+class Logger {
+   private:
+    std::string name;
+    static LEVEL level;
+
+   public:
+    Logger(std::string name = "default");
+    static void setLevel(LEVEL level);
+};
+
+}  // namespace log
+
+#endif  // CPP_LOGGER_LOGGER_H

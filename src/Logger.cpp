@@ -5,14 +5,11 @@
 #include "../include/Logger.h"
 
 namespace log {
-    LEVEL Logger::level = LEVEL::DEBUG;
 
-    Logger::Logger(std::string name) {
-        this->name = name;
-    }
+LEVEL Logger::level = LEVEL::DEBUG;
 
-    void Logger::setLevel(log::LEVEL level) {
-        Logger::level = level;
-    }
+Logger::Logger(std::string name) { this->name = name; }
 
-}
+void Logger::setLevel(log::LEVEL level) { Logger::level = level; }
+
+}  // namespace log

@@ -14,14 +14,15 @@ ProcessBar::ProcessBar(std::string description, int max_num) {
 }
 
 float ProcessBar::percentage() {
-    return float(this->cur_num)/float(this->max_num)*100.0;
+    return float(this->cur_num) / float(this->max_num) * 100.0;
 }
 
-void ProcessBar::update(int delta)
-{
+void ProcessBar::update(int delta) {
     this->cur_num += delta;
-    printf("%s%s%s[%6.2f%%]\r", GREEN_TEXT("[Processing] "),this->description.c_str(), this->divider.c_str(), this->percentage());
+    printf("%s%s%s[%6.2f%%]\r", GREEN_TEXT("[Processing] "),
+           this->description.c_str(), this->divider.c_str(),
+           this->percentage());
     fflush(stdout);
 }
 
-}
+}  // namespace log
