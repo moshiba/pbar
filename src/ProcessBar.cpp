@@ -6,12 +6,8 @@
 #include "../include/color.h"
 namespace log {
 
-ProcessBar::ProcessBar(std::string description, int max_num) {
-    this->description = description;
-    this->max_num = max_num;
-    this->cur_num = 0;
-    this->divider = " => ";
-}
+ProcessBar::ProcessBar(std::string description, int max_num)
+    : description(description), max_num(max_num), cur_num(0), divider(" => ") {}
 
 float ProcessBar::percentage() {
     return float(this->cur_num) / float(this->max_num) * 100.0;
