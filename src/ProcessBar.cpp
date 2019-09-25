@@ -10,7 +10,7 @@ ProcessBar::ProcessBar(std::string description, int max_num)
     : description(description), divider(" => "), max_num(max_num), cur_num(0) {}
 
 float ProcessBar::percentage() {
-    return float(this->cur_num) / float(this->max_num) * 100.0;
+    return static_cast<float>(this->cur_num) / this->max_num * 100.0;
 }
 
 void ProcessBar::update(int delta) {
