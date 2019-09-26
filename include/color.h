@@ -5,7 +5,7 @@
 #ifndef CPP_LOGGER_COLOR_H
 #define CPP_LOGGER_COLOR_H
 
-namespace utils{
+namespace utils {
 
 #define BLACK_TEXT(x) "\033[30;1m" x "\033[0m"
 #define RED_TEXT(x) "\033[31;1m" x "\033[0m"
@@ -25,6 +25,6 @@ namespace utils{
 #define BOLD_CYAN_TEXT(x) "\033[1m\033[36m;1m" x "\033[0m"
 #define BOLD_WHITE_TEXT(x) "\033[1m\033[37m;1m" x "\033[0m"
 
-}
+}  // namespace utils
 
-#endif //CPP_LOGGER_COLOR_H
+#endif  // CPP_LOGGER_COLOR_H

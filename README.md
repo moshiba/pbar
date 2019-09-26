@@ -1,2 +1,5 @@
 # cpp-logger
-An implementation of logger, status bar, etc. in C++. To let me easier print out information in C++.
+Implementations of logger, status bar, etc. in C++ to let me print out information easier.
+
+## Requirements
+- C++14 or higher
