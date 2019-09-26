@@ -5,8 +5,11 @@
 #ifndef CPP_LOGGER_PROCESSBAR_H
 #define CPP_LOGGER_PROCESSBAR_H
 
-#include <cstdio>
-#include <cstring>
+#include <sys/ioctl.h>
+#include <unistd.h>
+#include <cmath>
+#include <iomanip>
+#include <iostream>
 #include <string>
 
 namespace logging {
@@ -17,7 +20,12 @@ class ProcessBar {
     std::string divider;
     int max_num;
     int cur_num;
-    float percentage();
+
+   private:
+    inline float percentage();
+    template <class T>
+    int __digits(T number);
+    int window_width();
 
    public:
     ProcessBar(std::string description, int max_num);
