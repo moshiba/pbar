@@ -9,10 +9,12 @@
 namespace logging {
 
 ProcessBar::ProcessBar(std::string description, int max_num)
-    : description(description), divider(" => "), max_num(max_num), cur_num(0) {
+    : description(description), divider(" => "), max_num(max_num), cur_num(0) {}
+
+int ProcessBar::window_width() {
     winsize window_size;
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &window_size);
-    this->window_width = window_size.ws_col;
+    return window_size.ws_col;
 }
 
 inline float ProcessBar::percentage() {
@@ -31,7 +33,7 @@ int ProcessBar::__digits(T number) {
 
 void ProcessBar::update(int delta) {
     this->cur_num += delta;
-    int bar_width = this->window_width - this->__digits(this->cur_num) -
+    int bar_width = this->window_width() - this->__digits(this->cur_num) -
                     this->__digits(this->max_num) - 12;
 
     std::ios coutstate(nullptr);

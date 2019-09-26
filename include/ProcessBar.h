@@ -20,10 +20,12 @@ class ProcessBar {
     std::string divider;
     int max_num;
     int cur_num;
+
+   private:
     inline float percentage();
-    int window_width;
     template <class T>
     int __digits(T number);
+    int window_width();
 
    public:
     ProcessBar(std::string description, int max_num);
