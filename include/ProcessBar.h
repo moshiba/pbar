@@ -17,7 +17,6 @@ namespace logging {
 class ProcessBar {
    private:
     std::string description;
-    std::string divider;
     int max_num;
     int cur_num;
 

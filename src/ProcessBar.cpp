@@ -9,7 +9,7 @@
 namespace logging {
 
 ProcessBar::ProcessBar(std::string description, int max_num)
-    : description(description), divider(" => "), max_num(max_num), cur_num(0) {}
+    : description(description), max_num(max_num), cur_num(0) {}
 
 int ProcessBar::window_width() {
     winsize window_size;
