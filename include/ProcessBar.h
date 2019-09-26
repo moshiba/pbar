@@ -27,7 +27,9 @@ class ProcessBar {
     int window_width();
 
    public:
-    ProcessBar(std::string description, int max_num);
+    ProcessBar(const std::string description, const int max_num,
+               const int init_num);
+    ProcessBar(const std::string description, const int max_num);
     void update(int delta = 1);
 };
 
