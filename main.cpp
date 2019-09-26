@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include "include/Logger.h"
 #include "include/ProcessBar.h"
+#include <iostream>
 
 int main() {
     logging::ProcessBar *processBar = new logging::ProcessBar("testing", 9);
@@ -12,5 +13,6 @@ int main() {
         processBar->update();
         sleep(1);
     }
+    std::cout << std::endl;
     return 0;
 }
