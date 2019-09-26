@@ -3,8 +3,10 @@
 //
 
 #include "../include/ProcessBar.h"
+#include <cmath>
 #include "../include/color.h"
-namespace log {
+
+namespace logging {
 
 ProcessBar::ProcessBar(std::string description, int max_num)
     : description(description), divider(" => "), max_num(max_num), cur_num(0) {}
@@ -21,4 +23,4 @@ void ProcessBar::update(int delta) {
     fflush(stdout);
 }
 
-}  // namespace log
+}  // namespace logging

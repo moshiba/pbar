@@ -9,7 +9,7 @@
 #include <cstring>
 #include <string>
 
-namespace log {
+namespace logging {
 
 class ProcessBar {
    private:
@@ -24,6 +24,6 @@ class ProcessBar {
     void update(int delta = 1);
 };
 
-}  // namespace log
+}  // namespace logging
 
 #endif  // CPP_LOGGER_PROCESSBAR_H

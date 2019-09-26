@@ -4,12 +4,12 @@
 
 #include "../include/Logger.h"
 
-namespace log {
+namespace logging {
 
 LEVEL Logger::level = LEVEL::DEBUG;
 
 Logger::Logger(std::string name) { this->name = name; }
 
-void Logger::setLevel(log::LEVEL level) { Logger::level = level; }
+void Logger::setLevel(logging::LEVEL level) { Logger::level = level; }
 
-}  // namespace log
+}  // namespace logging

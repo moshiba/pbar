@@ -9,7 +9,7 @@
 #include <iostream>
 #include <string>
 
-namespace log {
+namespace logging {
 
 enum LEVEL { DEBUG = 0, INFO = 1, WARNING = 2, ERROR = 3 };
 
@@ -23,6 +23,6 @@ class Logger {
     static void setLevel(LEVEL level);
 };
 
-}  // namespace log
+}  // namespace logging
 
 #endif  // CPP_LOGGER_LOGGER_H
