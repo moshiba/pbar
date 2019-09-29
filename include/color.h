@@ -5,7 +5,16 @@
 #ifndef CPP_LOGGER_COLOR_H
 #define CPP_LOGGER_COLOR_H
 
+#include <string>
+
 namespace utils {
+
+namespace {
+std::ostream& __base(std::ostream& stream, std::string identifier) {
+    stream << identifier;
+    return stream;
+}
+}  // unnamed namespace
 
 #define BLACK_TEXT(x) "\033[30;1m" x "\033[0m"
 #define RED_TEXT(x) "\033[31;1m" x "\033[0m"
