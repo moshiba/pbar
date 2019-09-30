@@ -47,8 +47,6 @@ class ProgressBar {
     void update(int delta = 1);
 };
 
-int ProgressBar::nbars = 0;
-
 }  // namespace logging
 
 #endif  // CPP_LOGGER_PROGRESSBAR_H

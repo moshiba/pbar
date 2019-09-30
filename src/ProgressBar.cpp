@@ -11,6 +11,8 @@
 
 namespace logging {
 
+int ProgressBar::nbars = 0;
+
 ProgressBar::ProgressBar(const std::string& description, const int total,
                          const int initial, const int position)
     : description(description),
@@ -86,7 +88,9 @@ void ProgressBar::update(int delta) {
               << this->current_num << "/" << this->total << " ";
 
     std::cout.copyfmt(coutstate);
-    std::cout << "\r" << std::flush;
+    if (this->position == 0) {
+        std::cout << "\r" << std::flush;
+    }
 }
 
 }  // namespace logging
