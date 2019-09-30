@@ -38,9 +38,11 @@ inline float ProgressBar::percentage() {
     return static_cast<float>(this->current_num) / this->total * 100.0;
 }
 
-template <class T>
-int ProgressBar::__digits(T number) {
+int ProgressBar::__digits(int number) {
     int digits = 0;
+    if (number == 0) {
+        return 1;
+    }
     while (number) {
         number /= 10;
         ++digits;

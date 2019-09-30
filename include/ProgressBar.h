@@ -35,8 +35,7 @@ class ProgressBar {
 
    private:
     inline float percentage();
-    template <class T>
-    int __digits(T number);
+    int __digits(int number);
     int window_width();
     void moveto(const int n);
     void fill_screen(const std::string s);
