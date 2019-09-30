@@ -8,10 +8,11 @@
 #include <cstdio>
 #include <iostream>
 #include <string>
+#include "./utils/color.h"
 
 namespace logging {
 
-enum LEVEL { DEBUG = 0, INFO = 1, WARNING = 2, ERROR = 3 };
+enum class LEVEL { DEBUG = 0, INFO = 1, WARNING = 2, ERROR = 3 };
 
 class Logger {
    private:

@@ -4,7 +4,6 @@
 //
 
 #include "../include/ProcessBar.h"
-#include "../include/color.h"
 
 namespace logging {
 
@@ -42,6 +41,7 @@ void ProcessBar::update(int delta) {
 
     std::ios coutstate(nullptr);
     coutstate.copyfmt(std::cout);
+    std::cout << utils::reset;
 
     // print left metadata
     if (!this->description.empty()) {
@@ -49,7 +49,8 @@ void ProcessBar::update(int delta) {
         bar_width -= this->description.length() + 2;
     }
     std::cout << std::fixed << std::setw(6) << std::setprecision(2);
-    std::cout << this->percentage() << "%" << RED_TEXT("|");
+    std::cout << this->percentage() << "%" << utils::color::red << "|"
+              << utils::reset;
 
     // print bar
     int processed =
@@ -66,8 +67,8 @@ void ProcessBar::update(int delta) {
     }
 
     // print right metadata
-    std::cout << RED_TEXT("|") << " " << this->cur_num << "/" << this->max_num
-              << " ";
+    std::cout << utils::color::red << "|" << utils::reset << " "
+              << this->cur_num << "/" << this->max_num << " ";
 
     std::cout.copyfmt(coutstate);
     std::cout << "\r" << std::flush;
