@@ -4,7 +4,7 @@
  * Created by 范軒瑋 on 2019-09-25.
  *
  * logging module
- * 
+ *
  */
 
 #ifndef CPP_LOGGER_LOGGER_H
@@ -25,7 +25,7 @@ class Logger {
     static LEVEL level;
 
    public:
-    Logger(std::string name = "default");
+    Logger(const std::string name = "default");
     static void setLevel(LEVEL level);
 };
 
