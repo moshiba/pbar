@@ -16,5 +16,6 @@ int main() {
         // sleep(1);
     }
     std::cout << std::endl;
+    delete progressBar;
     return 0;
 }
