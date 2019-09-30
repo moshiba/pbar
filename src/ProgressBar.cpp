@@ -56,13 +56,15 @@ void ProgressBar::moveto(const int n) {
      * goes up if `n` is positive,
      * goes down otherwise.
      */
-    if (n < 0) {  // moves up
-        for (int i = 0; i > n; --i) {
-            std::cout << "\x1b[A";
-        }
-    } else {  // moves down
+    if (n > 0) {
+        // moves down
         for (int i = 0; i < n; ++i) {
             std::cout << "\n";
+        }
+    } else {
+        // moves up
+        for (int i = 0; i > n; --i) {
+            std::cout << "\x1b[A";
         }
     }
 }
