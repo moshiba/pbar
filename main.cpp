@@ -3,15 +3,17 @@
 //
 
 #include <unistd.h>
+#include <iostream>
 #include "include/Logger.h"
 #include "include/ProcessBar.h"
-#include <iostream>
+#include "include/utils/color.h"
 
 int main() {
-    logging::ProcessBar *processBar = new logging::ProcessBar("testing", 9);
-    for (int i = 0; i < 9; i++) {
-        processBar->update();
-        sleep(1);
+    constexpr int test_size = 100000;
+    logging::ProcessBar processBar("testing", test_size);
+    for (int i = 0; i < test_size; i++) {
+        processBar.update();
+        // sleep(1);
     }
     std::cout << std::endl;
     return 0;

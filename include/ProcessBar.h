@@ -11,13 +11,13 @@
 #include <iomanip>
 #include <iostream>
 #include <string>
+#include "./utils/color.h"
 
 namespace logging {
 
 class ProcessBar {
    private:
     std::string description;
-    std::string divider;
     int max_num;
     int cur_num;
 
@@ -28,7 +28,9 @@ class ProcessBar {
     int window_width();
 
    public:
-    ProcessBar(std::string description, int max_num);
+    ProcessBar(const std::string description, const int max_num,
+               const int init_num);
+    ProcessBar(const std::string description, const int max_num);
     void update(int delta = 1);
 };
 
