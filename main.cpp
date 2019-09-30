@@ -5,16 +5,25 @@
 #include <unistd.h>
 #include <iostream>
 #include "include/Logger.h"
-#include "include/ProcessBar.h"
+#include "include/ProgressBar.h"
 #include "include/utils/color.h"
 
 int main() {
-    constexpr int test_size = 100000;
-    logging::ProcessBar processBar("testing", test_size);
+    constexpr int test_size = 4;
+    constexpr int test_size2 = 80000;
+    logging::ProgressBar* progressBar = new logging::ProgressBar("fiiirst", test_size);
     for (int i = 0; i < test_size; i++) {
-        processBar.update();
-        // sleep(1);
+        logging::ProgressBar* progressBar2 = new logging::ProgressBar("secoond", test_size2);
+        for (int j = 0; j < test_size2; j++) {
+            progressBar2->update();
+            //sleep(1);
+        }
+        delete progressBar2;
+        progressBar->update();
     }
     std::cout << std::endl;
+    delete progressBar;
+    std::cout << "test driver END" << std::endl;
+
     return 0;
 }
