@@ -25,7 +25,7 @@ class Logger {
     static LEVEL level;
 
    public:
-    Logger(const std::string name = "default");
+    Logger(const std::string& name = "default");
     static void setLevel(LEVEL level);
 };
 

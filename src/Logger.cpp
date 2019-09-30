@@ -13,7 +13,7 @@ namespace logging {
 
 LEVEL Logger::level = LEVEL::DEBUG;
 
-Logger::Logger(const std::string name) : name(name) {}
+Logger::Logger(const std::string& name) : name(name) {}
 
 void Logger::setLevel(logging::LEVEL level) { Logger::level = level; }
 
