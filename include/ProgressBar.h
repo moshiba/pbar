@@ -48,6 +48,7 @@ class ProgressBar {
     explicit ProgressBar(const std::string& description, const int total);
     ~ProgressBar();
     void update(int delta = 1);
+    void close();
 };
 
 }  // namespace logging

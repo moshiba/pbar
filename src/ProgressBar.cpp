@@ -134,7 +134,9 @@ void ProgressBar::display() {
     this->moveto(-this->position);
 }
 
-    std::cout.copyfmt(coutstate);
+void ProgressBar::close() {
+    /** Cleanup and if not top level, close the progressbar
+     */
 }
 
 void ProgressBar::update(int delta) {
