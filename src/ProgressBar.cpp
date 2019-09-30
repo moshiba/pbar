@@ -7,29 +7,38 @@
  * with dynamic window filling width control
  */
 
-#include "../include/ProcessBar.h"
+#include "../include/ProgressBar.h"
 
 namespace logging {
 
-ProcessBar::ProcessBar(const std::string& description, const int max_num,
-                       const int init_num)
-    : description(description), max_num(max_num), cur_num(init_num) {}
+int ProgressBar::nbars = 0;
 
-ProcessBar::ProcessBar(const std::string& description, const int max_num)
-    : ProcessBar(description, max_num, 0) {}
+ProgressBar::ProgressBar(const std::string& description, const int total,
+                         const int initial, const int position)
+    : description(description),
+      total(total),
+      current_num(initial),
+      position(position) {
+    ProgressBar::nbars += 1;
+}
 
-int ProcessBar::window_width() {
+ProgressBar::ProgressBar(const std::string& description, const int total)
+    : ProgressBar(description, total, 0, ProgressBar::nbars) {}
+
+ProgressBar::~ProgressBar() { ProgressBar::nbars -= 1; }
+
+int ProgressBar::window_width() {
     winsize window_size;
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &window_size);
     return window_size.ws_col;
 }
 
-inline float ProcessBar::percentage() {
-    return static_cast<float>(this->cur_num) / this->max_num * 100.0;
+inline float ProgressBar::percentage() {
+    return static_cast<float>(this->current_num) / this->total * 100.0;
 }
 
 template <class T>
-int ProcessBar::__digits(T number) {
+int ProgressBar::__digits(T number) {
     int digits = 0;
     while (number) {
         number /= 10;
@@ -38,10 +47,10 @@ int ProcessBar::__digits(T number) {
     return digits;
 }
 
-void ProcessBar::update(int delta) {
-    this->cur_num += delta;
-    int bar_width = this->window_width() - this->__digits(this->cur_num) -
-                    this->__digits(this->max_num) - 12;
+void ProgressBar::update(int delta) {
+    this->current_num += delta;
+    int bar_width = this->window_width() - this->__digits(this->current_num) -
+                    this->__digits(this->total) - 12;
 
     std::ios coutstate(nullptr);
     coutstate.copyfmt(std::cout);
@@ -58,7 +67,7 @@ void ProcessBar::update(int delta) {
 
     // print bar
     int processed =
-        round(bar_width * this->cur_num / static_cast<float>(this->max_num));
+        round(bar_width * this->current_num / static_cast<float>(this->total));
     int remaining = bar_width - processed;
 
     if (bar_width > 0) {
@@ -72,10 +81,12 @@ void ProcessBar::update(int delta) {
 
     // print right metadata
     std::cout << utils::color::red << "|" << utils::reset << " "
-              << this->cur_num << "/" << this->max_num << " ";
+              << this->current_num << "/" << this->total << " ";
 
     std::cout.copyfmt(coutstate);
-    std::cout << "\r" << std::flush;
+    if (this->position == 0) {
+        std::cout << "\r" << std::flush;
+    }
 }
 
 }  // namespace logging
