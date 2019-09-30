@@ -1,7 +1,11 @@
-//
-// Created by 范軒瑋 on 2019-09-25.
-// Modified by HsuanTingLu
-//
+/*
+ * Copyright 2019 范軒瑋, HsuanTingLu
+ *
+ * Created by 范軒瑋 on 2019-09-25.
+ *
+ * A simple progress bar that needs manual updating,
+ * with dynamic window filling width control
+ */
 
 #include "../include/ProcessBar.h"
 

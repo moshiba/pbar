@@ -1,6 +1,11 @@
-//
-// Created by 范軒瑋 on 2019-09-25.
-//
+/*
+ * Copyright 2019 范軒瑋, HsuanTingLu
+ *
+ * Created by 范軒瑋 on 2019-09-25.
+ *
+ * A simple progress bar that needs manual updating,
+ * with dynamic window filling width control
+ */
 
 #ifndef CPP_LOGGER_PROCESSBAR_H
 #define CPP_LOGGER_PROCESSBAR_H
