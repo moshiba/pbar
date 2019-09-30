@@ -7,8 +7,8 @@
  * with dynamic window filling width control
  */
 
-#ifndef CPP_LOGGER_PROCESSBAR_H
-#define CPP_LOGGER_PROCESSBAR_H
+#ifndef CPP_LOGGER_PROGRESSBAR_H
+#define CPP_LOGGER_PROGRESSBAR_H
 
 #include <sys/ioctl.h>
 #include <unistd.h>
@@ -20,11 +20,15 @@
 
 namespace logging {
 
-class ProcessBar {
+class ProgressBar {
    private:
-    std::string description;
-    int max_num;
-    int cur_num;
+    static int nbars;
+
+   private:
+    const std::string description;
+    const int total;
+    int current_num;
+    const int position;
 
    private:
     inline float percentage();
@@ -33,12 +37,15 @@ class ProcessBar {
     int window_width();
 
    public:
-    ProcessBar(const std::string& description, const int max_num,
-               const int init_num);
-    ProcessBar(const std::string& description, const int max_num);
+    ProgressBar(const std::string& description, const int total,
+                const int initial, const int position);
+    ~ProgressBar();
+
     void update(int delta = 1);
 };
 
+int ProgressBar::nbars = 0;
+
 }  // namespace logging
 
-#endif  // CPP_LOGGER_PROCESSBAR_H
+#endif  // CPP_LOGGER_PROGRESSBAR_H

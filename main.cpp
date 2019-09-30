@@ -5,7 +5,7 @@
 #include <unistd.h>
 #include <iostream>
 #include "include/Logger.h"
-#include "include/ProcessBar.h"
+#include "include/ProgressBar.h"
 #include "include/utils/color.h"
 
 int main() {
