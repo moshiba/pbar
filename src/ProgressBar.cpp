@@ -84,39 +84,42 @@ void ProgressBar::update(int delta) {
 
     std::ios coutstate(nullptr);
     coutstate.copyfmt(std::cout);
-    std::cout << utils::reset;
 
-    // print left metadata
+    // Format progressbar info
+    std::ostringstream fstring;
+    fstring << utils::reset;
+
+    // Inject left metadata
     if (!this->description.empty()) {
-        std::cout << this->description << ": ";
+        fstring << this->description << ": ";
         bar_width -= this->description.length() + 2;
     }
-    std::cout << std::fixed << std::setw(6) << std::setprecision(2);
-    std::cout << this->percentage() << "%" << utils::color::red << "|"
-              << utils::reset;
+    fstring << std::fixed << std::setw(6) << std::setprecision(2);
+    fstring << this->percentage() << "%" << utils::color::red << "|"
+            << utils::reset;
 
-    // print bar
+    // Inject running-bar
     int processed =
         round(bar_width * this->current_num / static_cast<float>(this->total));
     int remaining = bar_width - processed;
 
     if (bar_width > 0) {
         for (int i = processed; i != 0; --i) {
-            std::cout << "█";
+            fstring << "█";
         }
         for (int i = remaining; i != 0; --i) {
-            std::cout << " ";
+            fstring << " ";
         }
     }
 
-    // print right metadata
-    std::cout << utils::color::red << "|" << utils::reset << " "
-              << this->current_num << "/" << this->total << " ";
+    // Inject right metadata
+    fstring << utils::color::red << "|" << utils::reset << " "
+            << this->current_num << "/" << this->total << " ";
+
+    this->fill_screen(fstring.str());
+    std::cout << std::flush;
 
     std::cout.copyfmt(coutstate);
-    if (this->position == 0) {
-        std::cout << "\r" << std::flush;
-    }
 }
 
 }  // namespace logging
