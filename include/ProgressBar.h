@@ -37,6 +37,7 @@ class ProgressBar {
     template <class T>
     int __digits(T number);
     int window_width();
+    void moveto(const int n);
     void fill_screen(const std::string s);
 
    public:

@@ -48,11 +48,30 @@ int ProgressBar::__digits(T number) {
     return digits;
 }
 
+void ProgressBar::moveto(const int n) {
+    /** Moves the cursor vertically,
+     *
+     * goes up if `n` is positive,
+     * goes down otherwise.
+     */
+    if (n < 0) {  // moves up
+        for (int i = 0; i > n; --i) {
+            std::cout << "\x1b[A";
+        }
+    } else {  // moves down
+        for (int i = 0; i < n; ++i) {
+            std::cout << "\n";
+        }
+    }
+}
+
 void ProgressBar::fill_screen(const std::string s) {
     /** Printing and in-place updating
      */
     std::cout << "\r" << s;
-    for(int i=0; i<std::max(this->last_print_len - static_cast<int>(s.length()), 0); i++){
+    for (int i = 0;
+         i < std::max(this->last_print_len - static_cast<int>(s.length()), 0);
+         i++) {
         std::cout << " ";
     }
     this->last_print_len = static_cast<int>(s.length());
