@@ -1,3 +1,6 @@
+# debug symbols
+*.dSYM/
+
 # Prerequisites
 *.d
 
@@ -34,5 +37,6 @@
 # IDE configs
 .idea/
 cmake-build-debug/
+.vscode/
 
 build/
