@@ -39,6 +39,9 @@ class ProgressBar {
    public:
     ProgressBar(const std::string& description, const int total,
                 const int initial, const int position);
+    ProgressBar(const std::string& description, const int total,
+                const int initial);
+    ProgressBar(const std::string& description, const int total);
     ~ProgressBar();
 
     void update(int delta = 1);

@@ -10,9 +10,9 @@
 
 int main() {
     constexpr int test_size = 100000;
-    logging::ProcessBar processBar("testing", test_size);
+    logging::ProgressBar* progressBar = new logging::ProgressBar("testing", test_size);
     for (int i = 0; i < test_size; i++) {
-        processBar.update();
+        progressBar->update();
         // sleep(1);
     }
     std::cout << std::endl;
