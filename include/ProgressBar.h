@@ -12,9 +12,11 @@
 
 #include <sys/ioctl.h>
 #include <unistd.h>
+#include <algorithm>
 #include <cmath>
 #include <iomanip>
 #include <iostream>
+#include <sstream>
 #include <string>
 #include "./utils/color.h"
 
@@ -29,20 +31,24 @@ class ProgressBar {
     const int total;
     int current_num;
     const int position;
+    int last_print_len;
 
    private:
     inline float percentage();
-    template <class T>
-    int __digits(T number);
+    int __digits(int number);
     int window_width();
+    void moveto(const int n);
+    void fill_screen(const std::string s);
+    std::string format_meter();
+    void display();
 
    public:
-    ProgressBar(const std::string& description, const int total,
+    explicit ProgressBar(const std::string& description, const int total,
                 const int initial, const int position);
-    ProgressBar(const std::string& description, const int total);
+    explicit ProgressBar(const std::string& description, const int total);
     ~ProgressBar();
-
     void update(int delta = 1);
+    void close();
 };
 
 }  // namespace logging

@@ -18,8 +18,10 @@ ProgressBar::ProgressBar(const std::string& description, const int total,
     : description(description),
       total(total),
       current_num(initial),
-      position(position) {
+      position(position),
+      last_print_len(0) {
     ProgressBar::nbars += 1;
+    this->display();
 }
 
 ProgressBar::ProgressBar(const std::string& description, const int total)
@@ -37,9 +39,11 @@ inline float ProgressBar::percentage() {
     return static_cast<float>(this->current_num) / this->total * 100.0;
 }
 
-template <class T>
-int ProgressBar::__digits(T number) {
+int ProgressBar::__digits(int number) {
     int digits = 0;
+    if (number == 0) {
+        return 1;
+    }
     while (number) {
         number /= 10;
         ++digits;
@@ -47,46 +51,99 @@ int ProgressBar::__digits(T number) {
     return digits;
 }
 
-void ProgressBar::update(int delta) {
-    this->current_num += delta;
+void ProgressBar::moveto(const int n) {
+    /** Moves the cursor vertically,
+     *
+     * goes up if `n` is positive,
+     * goes down otherwise.
+     */
+    if (n > 0) {
+        // moves down
+        for (int i = 0; i < n; ++i) {
+            std::cout << "\n";
+        }
+    } else {
+        // moves up
+        for (int i = 0; i > n; --i) {
+            std::cout << "\x1b[A";
+        }
+    }
+}
+
+void ProgressBar::fill_screen(const std::string s) {
+    /** Printing and in-place updating
+     */
+    std::cout << "\r" << s;
+    for (int i = 0;
+         i < std::max(this->last_print_len - static_cast<int>(s.length()), 0);
+         i++) {
+        std::cout << " ";
+    }
+    this->last_print_len = static_cast<int>(s.length());
+}
+
+std::string ProgressBar::format_meter() {
+    /** Returns a formatted progress bar in string format
+     */
     int bar_width = this->window_width() - this->__digits(this->current_num) -
                     this->__digits(this->total) - 12;
+    std::ostringstream fstring;
+    fstring << utils::reset;
 
-    std::ios coutstate(nullptr);
-    coutstate.copyfmt(std::cout);
-    std::cout << utils::reset;
-
-    // print left metadata
+    // Inject left metadata
     if (!this->description.empty()) {
-        std::cout << this->description << ": ";
+        fstring << this->description << ": ";
         bar_width -= this->description.length() + 2;
     }
-    std::cout << std::fixed << std::setw(6) << std::setprecision(2);
-    std::cout << this->percentage() << "%" << utils::color::red << "|"
-              << utils::reset;
+    fstring << std::fixed << std::setw(6) << std::setprecision(2);
+    fstring << this->percentage() << "%" << utils::color::red << "|"
+            << utils::reset;
 
-    // print bar
+    // Inject running-bar
     int processed =
         round(bar_width * this->current_num / static_cast<float>(this->total));
     int remaining = bar_width - processed;
 
     if (bar_width > 0) {
         for (int i = processed; i != 0; --i) {
-            std::cout << "█";
+            fstring << "█";
         }
         for (int i = remaining; i != 0; --i) {
-            std::cout << " ";
+            fstring << " ";
         }
     }
 
-    // print right metadata
-    std::cout << utils::color::red << "|" << utils::reset << " "
-              << this->current_num << "/" << this->total << " ";
+    // Inject right metadata
+    fstring << utils::color::red << "|" << utils::reset << " "
+            << this->current_num << "/" << this->total << " ";
 
+    return fstring.str();
+}
+
+void ProgressBar::display() {
+    /** Refresh display of this bar
+     */
+    this->moveto(this->position);
+
+    std::ios coutstate(nullptr);
+    coutstate.copyfmt(std::cout);
+    this->fill_screen(this->format_meter());
+    std::cout << std::flush;
     std::cout.copyfmt(coutstate);
-    if (this->position == 0) {
-        std::cout << "\r" << std::flush;
-    }
+
+    this->moveto(-this->position);
+    std::cout << std::flush;
+}
+
+void ProgressBar::close() {
+    /** Cleanup and if not top level, close the progressbar
+     */
+    std::cout << std::endl;
+}
+
+void ProgressBar::update(int delta) {
+    this->current_num += delta;
+    this->display();
 }
 
 }  // namespace logging
