@@ -8,6 +8,7 @@
 #include <cstdio>
 #include <iostream>
 #include <string>
+#include "./utils/color.h"
 
 namespace logging {
 

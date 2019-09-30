@@ -6,6 +6,7 @@
 #include <iostream>
 #include "include/Logger.h"
 #include "include/ProcessBar.h"
+#include "include/utils/color.h"
 
 int main() {
     constexpr int test_size = 100000;
