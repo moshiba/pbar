@@ -18,7 +18,8 @@ ProgressBar::ProgressBar(const std::string& description, const int total,
     : description(description),
       total(total),
       current_num(initial),
-      position(position) {
+      position(position),
+      last_print_len(0) {
     ProgressBar::nbars += 1;
 }
 
@@ -45,6 +46,16 @@ int ProgressBar::__digits(T number) {
         ++digits;
     }
     return digits;
+}
+
+void ProgressBar::fill_screen(const std::string s) {
+    /** Printing and in-place updating
+     */
+    std::cout << "\r" << s;
+    for(int i=0; i<std::max(this->last_print_len - static_cast<int>(s.length()), 0); i++){
+        std::cout << " ";
+    }
+    this->last_print_len = static_cast<int>(s.length());
 }
 
 void ProgressBar::update(int delta) {

@@ -12,6 +12,7 @@
 
 #include <sys/ioctl.h>
 #include <unistd.h>
+#include <algorithm>
 #include <cmath>
 #include <iomanip>
 #include <iostream>
@@ -29,19 +30,20 @@ class ProgressBar {
     const int total;
     int current_num;
     const int position;
+    int last_print_len;
 
    private:
     inline float percentage();
     template <class T>
     int __digits(T number);
     int window_width();
+    void fill_screen(const std::string s);
 
    public:
     ProgressBar(const std::string& description, const int total,
                 const int initial, const int position);
     ProgressBar(const std::string& description, const int total);
     ~ProgressBar();
-
     void update(int delta = 1);
 };
 
