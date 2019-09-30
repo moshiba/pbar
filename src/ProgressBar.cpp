@@ -22,12 +22,8 @@ ProgressBar::ProgressBar(const std::string& description, const int total,
     ProgressBar::nbars += 1;
 }
 
-ProgressBar::ProgressBar(const std::string& description, const int total,
-                         const int initial)
-    : ProgressBar(description, total, initial, ++ProgressBar::nbars) {}
-
 ProgressBar::ProgressBar(const std::string& description, const int total)
-    : ProgressBar(description, total, 0, ++ProgressBar::nbars) {}
+    : ProgressBar(description, total, 0, ProgressBar::nbars) {}
 
 ProgressBar::~ProgressBar() { ProgressBar::nbars -= 1; }
 
