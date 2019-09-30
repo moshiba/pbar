@@ -39,6 +39,8 @@ class ProgressBar {
     int window_width();
     void moveto(const int n);
     void fill_screen(const std::string s);
+    std::string format_meter();
+    void display();
 
    public:
     explicit ProgressBar(const std::string& description, const int total,

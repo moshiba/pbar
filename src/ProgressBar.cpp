@@ -21,6 +21,7 @@ ProgressBar::ProgressBar(const std::string& description, const int total,
       position(position),
       last_print_len(0) {
     ProgressBar::nbars += 1;
+    this->display();
 }
 
 ProgressBar::ProgressBar(const std::string& description, const int total)
@@ -81,15 +82,11 @@ void ProgressBar::fill_screen(const std::string s) {
     this->last_print_len = static_cast<int>(s.length());
 }
 
-void ProgressBar::update(int delta) {
-    this->current_num += delta;
+std::string ProgressBar::format_meter() {
+    /** Returns a formatted progress bar in string format
+     */
     int bar_width = this->window_width() - this->__digits(this->current_num) -
                     this->__digits(this->total) - 12;
-
-    std::ios coutstate(nullptr);
-    coutstate.copyfmt(std::cout);
-
-    // Format progressbar info
     std::ostringstream fstring;
     fstring << utils::reset;
 
@@ -120,10 +117,29 @@ void ProgressBar::update(int delta) {
     fstring << utils::color::red << "|" << utils::reset << " "
             << this->current_num << "/" << this->total << " ";
 
-    this->fill_screen(fstring.str());
+    return fstring.str();
+}
+
+void ProgressBar::display() {
+    /** Refresh display of this bar
+     */
+    this->moveto(this->position);
+
+    std::ios coutstate(nullptr);
+    coutstate.copyfmt(std::cout);
+    this->fill_screen(this->format_meter());
     std::cout << std::flush;
+    std::cout.copyfmt(coutstate);
+
+    this->moveto(-this->position);
+}
 
     std::cout.copyfmt(coutstate);
+}
+
+void ProgressBar::update(int delta) {
+    this->current_num += delta;
+    this->display();
 }
 
 }  // namespace logging
