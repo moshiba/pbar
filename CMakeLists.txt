@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.2)
+cmake_minimum_required(VERSION 3.5)
 
 project(cpp_logger)
 
@@ -20,3 +20,5 @@ set(
 )
 
 add_executable(${PROJECT_NAME} main.cpp ${LIB})
+
+
