@@ -1,0 +1,20 @@
+cxx_library(
+    name = "progress-bar",
+    srcs = [
+        "ProgressBar.cpp",
+    ],
+    headers = [],
+    exported_headers = [
+        "ProgressBar.h",
+    ],
+    header_namespace = "progress-bar",
+    link_style = "shared",
+    preferred_linkage = "shared",
+    deps = [
+        "//utils:builtin-color-util",
+    ],
+    visibility = [
+        "//examples:testdrive"
+    ],
+    labels = [],
+)

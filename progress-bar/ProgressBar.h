@@ -12,13 +12,15 @@
 
 #include <sys/ioctl.h>
 #include <unistd.h>
+
 #include <algorithm>
 #include <cmath>
 #include <iomanip>
 #include <iostream>
 #include <sstream>
 #include <string>
-#include "./utils/color.h"
+
+#include "utils/color.hpp"
 
 namespace logging {
 
@@ -44,7 +46,7 @@ class ProgressBar {
 
    public:
     explicit ProgressBar(const std::string& description, const int total,
-                const int initial, const int position);
+                         const int initial, const int position);
     explicit ProgressBar(const std::string& description, const int total);
     ~ProgressBar();
     void update(int delta = 1);

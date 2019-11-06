@@ -1,0 +1,20 @@
+[color]
+    ui = true
+
+[cxx]
+    # C compiler and preprocessor flags
+    cflags   = -Wall --std=c11
+    # C++ compiler and preprocessor flags
+    cxxflags = -Wall --std=c++11
+
+[cxx#debug]
+    cflags   = -Wall -Wextra -pedantic --std=c11   -O0 -g
+    cxxflags = -Wall -Wextra -pedantic --std=c++11 -O0 -g
+
+[cxx#bleeding-edge]
+    cflags   = -Wall -Wextra -pedantic --std=c17
+    cxxflags = -Wall -Wextra -pedantic --std=c++17
+
+[repositories]
+    buck = .
+

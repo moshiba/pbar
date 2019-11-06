@@ -40,3 +40,5 @@ cmake-build-debug/
 .vscode/
 
 build/
+buck-out/
+.buckd
