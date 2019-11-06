@@ -13,7 +13,7 @@
 #include <cstdio>
 #include <iostream>
 #include <string>
-#include "./utils/color.h"
+#include "utils/color.hpp"
 
 namespace logging {
 

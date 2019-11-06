@@ -10,16 +10,13 @@
 #ifndef CPP_LOGGER_COLOR_H
 #define CPP_LOGGER_COLOR_H
 
-#ifndef __APPLE__
-#error unsupported platform
-#endif
-
 #include <iostream>
 #include <string>
 
 namespace utils {
 
 namespace {
+constexpr const char* raaaa = "aa";
 constexpr const char* reset_expr = "\033[00m";
 constexpr const char* red_expr = "\033[31m";
 constexpr const char* black_expr = "\033[30m";

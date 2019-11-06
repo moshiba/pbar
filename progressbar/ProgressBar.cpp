@@ -7,7 +7,7 @@
  * with dynamic window filling width control
  */
 
-#include "../include/ProgressBar.h"
+#include "ProgressBar.h"
 
 namespace logging {
 

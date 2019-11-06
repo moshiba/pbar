@@ -4,9 +4,9 @@
 
 #include <unistd.h>
 #include <iostream>
-#include "include/Logger.h"
-#include "include/ProgressBar.h"
-#include "include/utils/color.h"
+#include "logger/Logger.h"
+#include "progressbar/ProgressBar.h"
+#include "utils/color.hpp"
 
 int main() {
     constexpr int test_size = 4;

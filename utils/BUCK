@@ -1,0 +1,15 @@
+cxx_library(
+    name = "builtin-color-util",
+    srcs = [],
+    headers = [],
+    exported_headers = [
+        "color.hpp",
+    ],
+    header_namespace = "utils/",
+    preferred_linkage = "static",
+    visibility = [
+        "//progressbar:progressbar",
+        "//logger:logger",
+    ],
+    labels = [],
+)
