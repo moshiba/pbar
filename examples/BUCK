@@ -6,7 +6,7 @@ cxx_binary(
     ],
     link_style = "shared",
     deps = [
-        "//progress-bar:progress-bar",
+        "//progressbar:progressbar",
         "//logger:logger",
     ],
     deps_query = "$declared_deps",

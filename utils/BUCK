@@ -8,7 +8,7 @@ cxx_library(
     header_namespace = "utils/",
     preferred_linkage = "static",
     visibility = [
-        "//progress-bar:progress-bar",
+        "//progressbar:progressbar",
         "//logger:logger",
     ],
     labels = [],
