@@ -1,6 +1,9 @@
-# pbar
+# pbar  ![GitHub](https://img.shields.io/github/license/hsuantinglu/pbar) ![GitHub release (latest SemVer including pre-releases)](https://img.shields.io/github/v/release/HsuanTingLu/pbar?include_prereleases)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/HsuanTingLu/pbar)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/c0335227c419495fac02ce71c83c60d6)](https://www.codacy.com/manual/HsuanTingLu/pbar?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=HsuanTingLu/pbar&amp;utm_campaign=Badge_Grade)
 
-Low overhead C++ progress bar
+Low overhead C++ progress bar,
+about 60μs per iteration
 
 ## Requirements
 
