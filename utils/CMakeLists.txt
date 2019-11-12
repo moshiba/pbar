@@ -16,7 +16,4 @@ target_compile_options(utils
         -Wextra
         -pedantic
         -Werror
-        #-O0
-        #-g3
-        -O3
 )
