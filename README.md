@@ -2,7 +2,7 @@
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/HsuanTingLu/pbar)
 
 Low overhead C++ progress bar,
-about 60μs per iteration
+about 225ns per iteration
 
 ## Requirements
 

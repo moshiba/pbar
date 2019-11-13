@@ -4,7 +4,7 @@
  * Created by 范軒瑋 on 2019-09-25.
  *
  * A simple progress bar that needs manual updating,
- * with dynamic window filling width control
+ *  with dynamic window filling width control
  */
 
 #include "pbar.h"
@@ -14,18 +14,40 @@ namespace pbar {
 int ProgressBar::nbars = 0;
 
 ProgressBar::ProgressBar(const std::string& description, const int total,
-                         const int initial, const int position)
+                         const bool leave, const int width,
+                         const std::chrono::nanoseconds min_interval_time,
+                         const std::string bar_format, const int initial_value,
+                         const int position)
     : description(description),
       total(total),
-      current_num(initial),
+      leave(leave),
+      min_interval_time(min_interval_time),
+      n(initial_value),
       position(position),
-      last_print_len(0) {
+      last_print_len(0),
+      min_interval_iter(1),
+      last_update_time(std::chrono::system_clock::now()),
+      last_update_n(initial_value) {
+    if (width > 0) {
+        // set constant width
+    } else {
+        // use dynamic width detection
+        // TODO: bind dynamic detection
+    }
+    if (bar_format.empty()) {
+        // use default bar
+    } else {
+        // TODO: bind bar formatting function
+    }
     ProgressBar::nbars += 1;
     this->display();
 }
 
 ProgressBar::ProgressBar(const std::string& description, const int total)
-    : ProgressBar(description, total, 0, ProgressBar::nbars) {}
+    : ProgressBar(description, total, false, -1,
+                  std::chrono::duration_cast<std::chrono::nanoseconds>(
+                      std::chrono::milliseconds(100)),
+                  "", 0, ProgressBar::nbars) {}
 
 ProgressBar::~ProgressBar() { ProgressBar::nbars -= 1; }
 
@@ -36,10 +58,10 @@ int ProgressBar::window_width() {
 }
 
 inline float ProgressBar::percentage() {
-    return static_cast<float>(this->current_num) / this->total * 100.0;
+    return static_cast<float>(this->n) / this->total * 100.0;
 }
 
-int ProgressBar::__digits(int number) {
+int ProgressBar::__digits(long long number) {
     int digits = 0;
     if (number == 0) {
         return 1;
@@ -85,7 +107,7 @@ void ProgressBar::fill_screen(const std::string s) {
 std::string ProgressBar::format_meter() {
     /** Returns a formatted progress bar in string format
      */
-    int bar_width = this->window_width() - this->__digits(this->current_num) -
+    int bar_width = this->window_width() - this->__digits(this->n) -
                     this->__digits(this->total) - 12;
     std::ostringstream fstring;
     fstring << utils::reset;
@@ -101,7 +123,7 @@ std::string ProgressBar::format_meter() {
 
     // Inject running-bar
     int processed =
-        round(bar_width * this->current_num / static_cast<float>(this->total));
+        round(bar_width * this->n / static_cast<float>(this->total));
     int remaining = bar_width - processed;
 
     if (bar_width > 0) {
@@ -114,8 +136,8 @@ std::string ProgressBar::format_meter() {
     }
 
     // Inject right metadata
-    fstring << utils::color::red << "|" << utils::reset << " "
-            << this->current_num << "/" << this->total << " ";
+    fstring << utils::color::red << "|" << utils::reset << " " << this->n << "/"
+            << this->total << " ";
 
     return fstring.str();
 }
@@ -141,9 +163,29 @@ void ProgressBar::close() {
     std::cout << std::endl;
 }
 
-void ProgressBar::update(int delta) {
-    this->current_num += delta;
-    this->display();
+void ProgressBar::update(const int n) {
+    this->n += n;
+    // BUG: consider last_print_n when n < 0
+
+    // check delta-iterations to reduce calls to clock::now()
+    if (this->delta_iter() > this->min_interval_iter) {
+        // check delta-time
+        if (this->delta_time() > this->min_interval_time) {
+            this->display();
+
+            // TODO: dynamic min_interval_iter adjustments
+
+            this->last_update_n = this->n;
+            this->last_update_time = std::chrono::system_clock::now();
+        }
+    }
 }
 
-}  // namespace logging
+const std::chrono::nanoseconds ProgressBar::delta_time() {
+    return std::chrono::duration_cast<std::chrono::nanoseconds>(
+        std::chrono::system_clock::now() - this->last_update_time);
+}
+
+int ProgressBar::delta_iter() { return this->n - this->last_update_n; }
+
+}  // namespace pbar

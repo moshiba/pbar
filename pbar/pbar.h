@@ -14,44 +14,62 @@
 #include <unistd.h>
 
 #include <algorithm>
+#include <chrono>
 #include <cmath>
 #include <iomanip>
 #include <iostream>
+#include <ratio>
 #include <sstream>
 #include <string>
-#include <chrono>
-#include <ratio>
 
 #include "utils/color.hpp"
 
 namespace pbar {
 
+class Bar {
+   public:
+    Bar();
+    void refresh();
+};
+
 class ProgressBar {
    private:
-    static int nbars;
+    static int nbars;  // bar count
 
    private:
     const std::string description;
-    const int total;
-    int current_num;
+    const long long total;
+    const bool leave;
+    int width;
+    std::chrono::nanoseconds min_interval_time;
+    const std::string bar_format;
+    long long n;
     const int position;
     int last_print_len;
+    int min_interval_iter;
+    std::chrono::system_clock::time_point last_update_time;
+    long long last_update_n;
 
    private:
     inline float percentage();
-    int __digits(int number);
+    int __digits(long long number);
     int window_width();
     void moveto(const int n);
     void fill_screen(const std::string s);
     std::string format_meter();
     void display();
+    const std::chrono::nanoseconds delta_time();
+    int delta_iter();
 
    public:
     explicit ProgressBar(const std::string& description, const int total,
-                         const int initial, const int position);
+                         const bool leave, const int width,
+                         const std::chrono::nanoseconds min_interval_time,
+                         const std::string bar_format, const int initial_value,
+                         const int position);
     explicit ProgressBar(const std::string& description, const int total);
     ~ProgressBar();
-    void update(int delta = 1);
+    void update(const int n = 1);
     void close();
 };
 
