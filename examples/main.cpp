@@ -15,7 +15,7 @@ int main() {
         pbar::ProgressBar* progressBar2 = new pbar::ProgressBar("secoond", test_size2);
         for (int j = 0; j < test_size2; j++) {
             progressBar2->update();
-            //sleep(1);
+            usleep(1);
         }
         delete progressBar2;
         progressBar->update();

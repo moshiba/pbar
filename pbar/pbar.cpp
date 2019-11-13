@@ -25,7 +25,7 @@ ProgressBar::ProgressBar(const std::string& description, const int total,
       n(initial_value),
       position(position),
       last_print_len(0),
-      min_interval_iter(1),
+      min_interval_iter(100),
       last_update_time(std::chrono::system_clock::now()),
       last_update_n(initial_value) {
     if (width > 0) {

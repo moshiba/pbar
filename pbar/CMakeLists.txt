@@ -19,7 +19,7 @@ target_compile_options(progressbar
         -Wextra
         -pedantic
         #-Werror
-        -O3
+        -Os
 )
 target_link_libraries(progressbar
     PRIVATE utils

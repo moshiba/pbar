@@ -14,7 +14,7 @@ set_target_properties(driver PROPERTIES
 )
 target_compile_options(driver
     PRIVATE
-        -O3
+        -O0
 )
 target_link_libraries(driver
     PUBLIC utils progressbar
