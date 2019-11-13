@@ -1,10 +1,11 @@
 add_library(progressbar SHARED)
 target_sources(progressbar
-    INTERFACE ProgressBar.h
-    PRIVATE   ProgressBar.cpp
+    INTERFACE pbar.h
+    PRIVATE   pbar.cpp
 )
 target_include_directories(progressbar
-    PRIVATE ${CMAKE_SOURCE_DIR}
+    PUBLIC ${PROJECT_SOURCE_DIR}
+    PRIVATE /usr/local/include
 )
 target_compile_features(progressbar
     PRIVATE
@@ -18,9 +19,9 @@ target_compile_options(progressbar
         -Wall
         -Wextra
         -pedantic
-        -Werror
-        -O3
+        #-Werror
+        -Os
 )
-target_link_libraries(progressbar
-    PRIVATE utils
-)
+find_library(FIND_AESC aesc)
+message(WARNING "path: ${FIND_AESC}")
+target_link_libraries(progressbar PRIVATE ${FIND_AESC})

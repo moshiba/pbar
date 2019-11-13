@@ -1,9 +1,9 @@
 # test driver
-add_executable(driver EXCLUDE_FROM_ALL
-    main.cpp
-)
+add_executable(driver EXCLUDE_FROM_ALL main.cpp)
+
 target_include_directories(driver
-    PRIVATE ${CMAKE_SOURCE_DIR}
+    PUBLIC
+        ${PROJECT_SOURCE_DIR}/pbar
 )
 target_compile_features(driver
     PRIVATE
@@ -14,8 +14,12 @@ set_target_properties(driver PROPERTIES
 )
 target_compile_options(driver
     PRIVATE
-        -O3
+        -Wall
+        -Wextra
+        -pedantic
+        -O0
 )
+
 target_link_libraries(driver
-    PUBLIC utils progressbar
+    PUBLIC progressbar
 )

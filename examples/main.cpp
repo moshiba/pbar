@@ -4,18 +4,17 @@
 
 #include <unistd.h>
 #include <iostream>
-#include "progressbar/ProgressBar.h"
-#include "utils/color.hpp"
+#include "pbar.h"
 
 int main() {
     constexpr int test_size = 4;
     constexpr int test_size2 = 80000;
-    logging::ProgressBar* progressBar = new logging::ProgressBar("fiiirst", test_size);
+    pbar::ProgressBar* progressBar = new pbar::ProgressBar("fiiirst", test_size);
     for (int i = 0; i < test_size; i++) {
-        logging::ProgressBar* progressBar2 = new logging::ProgressBar("secoond", test_size2);
+        pbar::ProgressBar* progressBar2 = new pbar::ProgressBar("secoond", test_size2);
         for (int j = 0; j < test_size2; j++) {
             progressBar2->update();
-            //sleep(1);
+            usleep(1);
         }
         delete progressBar2;
         progressBar->update();

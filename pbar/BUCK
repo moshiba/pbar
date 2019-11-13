@@ -1,11 +1,11 @@
 cxx_library(
     name = "progressbar",
     srcs = [
-        "ProgressBar.cpp",
+        "pbar.cpp",
     ],
     headers = [],
     exported_headers = [
-        "ProgressBar.h",
+        "pbar.h",
     ],
     header_namespace = "progressbar",
     link_style = "shared",
