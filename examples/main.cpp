@@ -4,8 +4,7 @@
 
 #include <unistd.h>
 #include <iostream>
-#include "pbar/pbar.h"
-#include "utils/color.hpp"
+#include "pbar.h"
 
 int main() {
     constexpr int test_size = 4;

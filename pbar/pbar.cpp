@@ -8,6 +8,8 @@
  */
 
 #include "pbar.h"
+#include "aesc.hpp"
+#include "unistd.h"
 
 namespace pbar {
 
@@ -25,7 +27,7 @@ ProgressBar::ProgressBar(const std::string& description, const int total,
       n(initial_value),
       position(position),
       last_print_len(0),
-      min_interval_iter(100),
+      min_interval_iter(1),
       last_update_time(std::chrono::system_clock::now()),
       last_update_n(initial_value) {
     if (width > 0) {
@@ -110,7 +112,7 @@ std::string ProgressBar::format_meter() {
     int bar_width = this->window_width() - this->__digits(this->n) -
                     this->__digits(this->total) - 12;
     std::ostringstream fstring;
-    fstring << utils::reset;
+    fstring << aesc::render::reset;
 
     // Inject left metadata
     if (!this->description.empty()) {
@@ -118,8 +120,8 @@ std::string ProgressBar::format_meter() {
         bar_width -= this->description.length() + 2;
     }
     fstring << std::fixed << std::setw(6) << std::setprecision(2);
-    fstring << this->percentage() << "%" << utils::color::red << "|"
-            << utils::reset;
+    fstring << this->percentage() << "%" << aesc::color::red << "|"
+            << aesc::render::reset;
 
     // Inject running-bar
     int processed =
@@ -136,7 +138,7 @@ std::string ProgressBar::format_meter() {
     }
 
     // Inject right metadata
-    fstring << utils::color::red << "|" << utils::reset << " " << this->n << "/"
+    fstring << aesc::color::red << "|" << aesc::render::reset << " " << this->n << "/"
             << this->total << " ";
 
     return fstring.str();

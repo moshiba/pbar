@@ -11,7 +11,6 @@
 #define PBAR_PBAR_H
 
 #include <sys/ioctl.h>
-#include <unistd.h>
 
 #include <algorithm>
 #include <chrono>
@@ -21,8 +20,6 @@
 #include <ratio>
 #include <sstream>
 #include <string>
-
-#include "utils/color.hpp"
 
 namespace pbar {
 
