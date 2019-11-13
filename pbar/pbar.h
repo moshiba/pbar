@@ -7,8 +7,8 @@
  * with dynamic window filling width control
  */
 
-#ifndef CPP_LOGGER_PROGRESSBAR_H
-#define CPP_LOGGER_PROGRESSBAR_H
+#ifndef PBAR_PBAR_H
+#define PBAR_PBAR_H
 
 #include <sys/ioctl.h>
 #include <unistd.h>
@@ -19,10 +19,12 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <chrono>
+#include <ratio>
 
 #include "utils/color.hpp"
 
-namespace logging {
+namespace pbar {
 
 class ProgressBar {
    private:
@@ -53,6 +55,6 @@ class ProgressBar {
     void close();
 };
 
-}  // namespace logging
+}  // namespace pbar
 
-#endif  // CPP_LOGGER_PROGRESSBAR_H
+#endif  // PBAR_PBAR_H

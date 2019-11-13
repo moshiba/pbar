@@ -7,9 +7,9 @@
  * with dynamic window filling width control
  */
 
-#include "ProgressBar.h"
+#include "pbar.h"
 
-namespace logging {
+namespace pbar {
 
 int ProgressBar::nbars = 0;
 

@@ -1,7 +1,7 @@
 add_library(progressbar SHARED)
 target_sources(progressbar
-    INTERFACE ProgressBar.h
-    PRIVATE   ProgressBar.cpp
+    INTERFACE pbar.h
+    PRIVATE   pbar.cpp
 )
 target_include_directories(progressbar
     PRIVATE ${CMAKE_SOURCE_DIR}

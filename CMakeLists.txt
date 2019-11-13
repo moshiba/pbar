@@ -6,7 +6,7 @@ check_ipo_supported(RESULT ipo_support OUTPUT ipo_out LANGUAGES CXX)
 project(cpp_logger LANGUAGES CXX)
 
 add_subdirectory(utils)
-add_subdirectory(progressbar)
+add_subdirectory(pbar)
 add_subdirectory(examples)
 
 
