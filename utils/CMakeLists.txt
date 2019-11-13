@@ -15,5 +15,5 @@ target_compile_options(utils
         -Wall
         -Wextra
         -pedantic
-        -Werror
+        #-Werror
 )

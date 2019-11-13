@@ -18,7 +18,7 @@ target_compile_options(progressbar
         -Wall
         -Wextra
         -pedantic
-        -Werror
+        #-Werror
         -O3
 )
 target_link_libraries(progressbar
