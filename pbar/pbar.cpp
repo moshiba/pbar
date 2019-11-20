@@ -52,7 +52,13 @@ ProgressBar::ProgressBar(const std::string& description, const int total)
                       std::chrono::milliseconds(100)),
                   "", 0, ProgressBar::nbars) {}
 
-ProgressBar::~ProgressBar() { ProgressBar::nbars -= 1; }
+ProgressBar::~ProgressBar() {
+    this->display();
+
+    /* Cleanup and if not top level, close the progressbar
+     */
+    ProgressBar::nbars -= 1;
+}
 
 int ProgressBar::window_width() {
     winsize window_size;
@@ -160,12 +166,6 @@ void ProgressBar::display() {
 
     this->moveto(-this->position);
     std::cout << std::flush;
-}
-
-void ProgressBar::close() {
-    /** Cleanup and if not top level, close the progressbar
-     */
-    std::cout << std::endl;
 }
 
 void ProgressBar::update(const int n) {
