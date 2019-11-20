@@ -25,12 +25,12 @@ ProgressBar::ProgressBar(const std::string& description, const int total,
       total(total),
       leave(leave),
       min_interval_time(min_interval_time),
+      min_interval_iter(1),
       n(initial_value),
       position(position),
       last_print_len(0),
-      min_interval_iter(1),
-      last_update_time(std::chrono::system_clock::now()),
-      last_update_n(initial_value) {
+      last_update_n(initial_value),
+      last_update_time(std::chrono::system_clock::now()) {
     if (width > 0) {
         // set constant width
     } else {
@@ -141,8 +141,8 @@ std::string ProgressBar::format_meter() {
     }
 
     // Inject right metadata
-    fstring << aesc::color::red << "|" << aesc::render::reset << " " << this->n << "/"
-            << this->total << " ";
+    fstring << aesc::color::red << "|" << aesc::render::reset << " " << this->n
+            << "/" << this->total << " ";
 
     return fstring.str();
 }
@@ -172,13 +172,16 @@ void ProgressBar::update(const int n) {
     this->n += n;
     // BUG: consider last_print_n when n < 0
 
-    // check delta-iterations to reduce calls to clock::now()
-    if (this->delta_iter() > this->min_interval_iter) {
+    // check delta-iter to reduce calls to clock::now()
+    long delta_iters(std::move(this->delta_iter()));
+    if (delta_iters >= this->min_interval_iter) {
         // check delta-time
         if (this->delta_time() > this->min_interval_time) {
             this->display();
 
             // TODO: dynamic min_interval_iter adjustments
+            this->min_interval_iter = delta_iters / 2;
+            // TODO: evaluate this guess on next round
 
             this->last_update_n = this->n;
             this->last_update_time = std::chrono::system_clock::now();
@@ -191,6 +194,8 @@ const std::chrono::nanoseconds ProgressBar::delta_time() {
         std::chrono::system_clock::now() - this->last_update_time);
 }
 
-int ProgressBar::delta_iter() { return this->n - this->last_update_n; }
+long ProgressBar::delta_iter() {
+    return static_cast<long>(this->n - this->last_update_n);
+}
 
 }  // namespace pbar

@@ -39,13 +39,13 @@ class ProgressBar {
     const bool leave;
     int width;
     std::chrono::nanoseconds min_interval_time;
+    long min_interval_iter;
     const std::string bar_format;
     long long n;
     const int position;
     int last_print_len;
-    int min_interval_iter;
-    std::chrono::system_clock::time_point last_update_time;
     long long last_update_n;
+    std::chrono::system_clock::time_point last_update_time;
 
    private:
     inline float percentage();
@@ -56,7 +56,7 @@ class ProgressBar {
     std::string format_meter();
     void display();
     const std::chrono::nanoseconds delta_time();
-    int delta_iter();
+    long delta_iter();
 
    public:
     explicit ProgressBar(const std::string& description, const int total,
