@@ -8,6 +8,7 @@
  */
 
 #include "pbar.h"
+
 #include "aesc.hpp"
 #include "unistd.h"
 
@@ -78,19 +79,21 @@ int ProgressBar::__digits(long long number) {
 void ProgressBar::moveto(const int n) {
     /** Moves the cursor vertically,
      *
-     * goes up if `n` is positive,
+     * goes up if `n` is negative,
      * goes down otherwise.
      */
-    if (n > 0) {
+
+    // the common case is n=0, skips it for performance
+    if (n == 0) {
+        return;
+    } else if (n > 0) {
         // moves down
-        for (int i = 0; i < n; ++i) {
+        for (int i = 0; i != n; ++i) {
             std::cout << "\n";
         }
     } else {
         // moves up
-        for (int i = 0; i > n; --i) {
-            std::cout << "\x1b[A";
-        }
+        std::cout << aesc::cursor::up(-n);
     }
 }
 
