@@ -11,11 +11,7 @@
 
 #include <sys/ioctl.h>
 
-#include <algorithm>
 #include <chrono>
-#include <cmath>
-#include <iomanip>
-#include <iostream>
 #include <ratio>
 #include <sstream>
 #include <string>
@@ -55,6 +51,8 @@ class dynamic_window_width final : public window_width {
 }  // namespace window_width
 
 class ProgressBar {
+    /* Not copyable, but movable
+     */
    private:
     static int nbars;  // bar count
 
@@ -89,7 +87,9 @@ class ProgressBar {
                          const std::chrono::nanoseconds min_interval_time,
                          const std::string bar_format, const int initial_value,
                          const int position);
-    explicit ProgressBar(const std::string& description, const int total);
+    explicit ProgressBar(const std::string& description, const int total,
+                         const bool leave = (ProgressBar::nbars ? false
+                                                                : true));
     ~ProgressBar();
     void update(const int n = 1);
     void close();

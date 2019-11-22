@@ -8,6 +8,10 @@
 
 #include "pbar.h"
 
+#include <cmath>
+#include <iomanip>
+#include <iostream>
+
 #include "aesc.hpp"
 #include "unistd.h"
 
@@ -60,8 +64,9 @@ ProgressBar::ProgressBar(const std::string& description, const int total,
     this->display();
 }
 
-ProgressBar::ProgressBar(const std::string& description, const int total)
-    : ProgressBar(description, total, false, -1,
+ProgressBar::ProgressBar(const std::string& description, const int total,
+                         const bool leave)
+    : ProgressBar(description, total, leave, -1,
                   std::chrono::duration_cast<std::chrono::nanoseconds>(
                       std::chrono::milliseconds(100)),
                   "", 0, ProgressBar::nbars) {}
