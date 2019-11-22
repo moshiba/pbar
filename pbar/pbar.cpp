@@ -70,13 +70,12 @@ inline float ProgressBar::percentage() {
 }
 
 int ProgressBar::__digits(long long number) {
-    int digits = 0;
+    int digits;
     if (number == 0) {
         return 1;
     }
-    while (number) {
+    for (digits = 0; number; ++digits) {
         number /= 10;
-        ++digits;
     }
     return digits;
 }
@@ -160,7 +159,7 @@ void ProgressBar::display() {
     std::ios coutstate(nullptr);
     coutstate.copyfmt(std::cout);
     this->fill_screen(this->format_meter());
-    std::cout << std::flush;
+    // std::cout << std::flush;
     std::cout.copyfmt(coutstate);
 
     this->moveto(-this->position);
@@ -169,28 +168,31 @@ void ProgressBar::display() {
 
 void ProgressBar::update(const int n) {
     this->n += n;
-    // BUG: consider last_print_n when n < 0
+    // BUG: TODO: consider last_print_n when n < 0
 
     // check delta-iter to reduce calls to clock::now()
     long delta_iters(std::move(this->delta_iter()));
     if (delta_iters >= this->min_interval_iter) {
         // check delta-time
-        if (this->delta_time() > this->min_interval_time) {
+        std::chrono::time_point<std::chrono::system_clock> now =
+            std::chrono::system_clock::now();
+        if (this->delta_time(now) > this->min_interval_time) {
             this->display();
 
             // TODO: dynamic min_interval_iter adjustments
-            this->min_interval_iter = delta_iters / 2;
-            // TODO: evaluate this guess on next round
+            this->min_interval_iter = delta_iters / 3;
+            // TODO: how to evaluate this guess on next round
 
             this->last_update_n = this->n;
-            this->last_update_time = std::chrono::system_clock::now();
+            this->last_update_time = std::move(now);
         }
     }
 }
 
-const std::chrono::nanoseconds ProgressBar::delta_time() {
+const std::chrono::nanoseconds ProgressBar::delta_time(
+    std::chrono::time_point<std::chrono::system_clock>& now) {
     return std::chrono::duration_cast<std::chrono::nanoseconds>(
-        std::chrono::system_clock::now() - this->last_update_time);
+        now - this->last_update_time);
 }
 
 long ProgressBar::delta_iter() {

@@ -54,7 +54,8 @@ class ProgressBar {
     void fill_screen(const std::string s);
     std::string format_meter();
     void display();
-    const std::chrono::nanoseconds delta_time();
+    const std::chrono::nanoseconds delta_time(
+        std::chrono::time_point<std::chrono::system_clock>& now);
     long delta_iter();
 
    public:
