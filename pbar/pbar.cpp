@@ -47,7 +47,6 @@ ProgressBar::ProgressBar(const std::string& description, const int total,
       min_interval_iter(1),
       n(initial_value),
       position(position),
-      last_print_len(0),
       last_update_n(initial_value),
       last_update_time(std::chrono::system_clock::now()) {
     if (width > 0) {
@@ -113,15 +112,11 @@ void ProgressBar::moveto(const int n) {
 }
 
 void ProgressBar::fill_screen(const std::string s) {
-    /** Printing and in-place updating
+    /* Clears the entire line,
+     *  resets cursor to the beginning position,
+     *  then print the designated string.
      */
-    std::cout << "\r" << s;
-    for (int i = 0;
-         i < std::max(this->last_print_len - static_cast<int>(s.length()), 0);
-         i++) {
-        std::cout << " ";
-    }
-    this->last_print_len = static_cast<int>(s.length());
+    std::cout << aesc::cursor::EL(aesc::cursor::clear::entire) << "\r" << s;
 }
 
 std::string ProgressBar::format_meter() {

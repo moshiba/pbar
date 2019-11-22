@@ -65,7 +65,6 @@ class ProgressBar {
     const std::string bar_format;
     long long n;
     const int position;
-    int last_print_len;
     long long last_update_n;
     std::chrono::system_clock::time_point last_update_time;
 
