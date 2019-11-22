@@ -15,6 +15,22 @@ namespace pbar {
 
 int ProgressBar::nbars = 0;
 
+namespace window_width {
+// window_width
+int window_width::operator()() const { return 0; }
+
+// static_window_width
+static_window_width::static_window_width(const int width) : width(width) {}
+int static_window_width::operator()() const { return this->width; }
+
+// dynamic_window_width
+dynamic_window_width::dynamic_window_width() {}
+int dynamic_window_width::operator()() const {
+    ioctl(STDOUT_FILENO, TIOCGWINSZ, &(this->window_size));
+    return static_cast<int>(this->window_size.ws_col);
+}
+}  // namespace window_width
+
 ProgressBar::ProgressBar(const std::string& description, const int total,
                          const bool leave, const int width,
                          const std::chrono::nanoseconds min_interval_time,
@@ -31,10 +47,9 @@ ProgressBar::ProgressBar(const std::string& description, const int total,
       last_update_n(initial_value),
       last_update_time(std::chrono::system_clock::now()) {
     if (width > 0) {
-        // set constant width
+        this->window_width = new window_width::static_window_width(width);
     } else {
-        // use dynamic width detection
-        // TODO: bind dynamic detection
+        this->window_width = new window_width::dynamic_window_width();
     }
     if (bar_format.empty()) {
         // use default bar
@@ -57,12 +72,6 @@ ProgressBar::~ProgressBar() {
     /* Cleanup and if not top level, close the progressbar
      */
     ProgressBar::nbars -= 1;
-}
-
-int ProgressBar::window_width() {
-    winsize window_size;
-    ioctl(STDOUT_FILENO, TIOCGWINSZ, &window_size);
-    return window_size.ws_col;
 }
 
 inline float ProgressBar::percentage() {
@@ -113,7 +122,7 @@ void ProgressBar::fill_screen(const std::string s) {
 std::string ProgressBar::format_meter() {
     /** Returns a formatted progress bar in string format
      */
-    int bar_width = this->window_width() - this->__digits(this->n) -
+    int bar_width = (*this->window_width)() - this->__digits(this->n) -
                     this->__digits(this->total) - 12;
     std::ostringstream fstring;
     fstring << aesc::render::reset;

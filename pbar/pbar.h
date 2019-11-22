@@ -28,6 +28,32 @@ class Bar {
     void refresh();
 };
 
+namespace window_width {
+// Functor
+class window_width {
+   public:
+    virtual int operator()() const;
+};
+
+class static_window_width final : public window_width {
+   private:
+    const int width;
+
+   public:
+    static_window_width(const int width);
+    int operator()() const final override;
+};
+
+class dynamic_window_width final : public window_width {
+   private:
+    winsize window_size;
+
+   public:
+    dynamic_window_width();
+    int operator()() const final override;
+};
+}  // namespace window_width
+
 class ProgressBar {
    private:
     static int nbars;  // bar count
@@ -36,7 +62,6 @@ class ProgressBar {
     const std::string description;
     const long long total;
     const bool leave;
-    int width;
     std::chrono::nanoseconds min_interval_time;
     long min_interval_iter;
     const std::string bar_format;
@@ -49,7 +74,7 @@ class ProgressBar {
    private:
     inline float percentage();
     int __digits(long long number);
-    int window_width();
+    window_width::window_width* window_width;
     void moveto(const int n);
     void fill_screen(const std::string s);
     std::string format_meter();
