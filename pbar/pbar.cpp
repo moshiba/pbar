@@ -87,10 +87,7 @@ void ProgressBar::moveto(const int n) {
      * goes down otherwise.
      */
 
-    // the common case is n=0, skips it for performance
-    if (n == 0) {
-        return;
-    } else if (n > 0) {
+    if (n > 0) {
         // moves down
         for (int i = 0; i != n; ++i) {
             std::cout << "\n";
@@ -154,7 +151,9 @@ std::string ProgressBar::format_meter() {
 void ProgressBar::display() {
     /** Refresh display of this bar
      */
-    this->moveto(this->position);
+    if (this->position) {
+        this->moveto(this->position);
+    }
 
     std::ios coutstate(nullptr);
     coutstate.copyfmt(std::cout);
@@ -162,7 +161,9 @@ void ProgressBar::display() {
     // std::cout << std::flush;
     std::cout.copyfmt(coutstate);
 
-    this->moveto(-this->position);
+    if (this->position) {
+        this->moveto(-this->position);
+    }
     std::cout << std::flush;
 }
 
