@@ -1,6 +1,9 @@
-//
-// Created by 范軒瑋 on 2019-09-25.
-//
+/*
+ * Base class of the progress bar
+ * Copyright (C) 2019  Hsuan-Ting Lu
+ *
+ * GNU General Public License v3.0+ (see LICENSE or https://www.gnu.org/licenses/)
+ */
 
 #include <unistd.h>
 #include <iostream>

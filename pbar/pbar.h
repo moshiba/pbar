@@ -1,10 +1,9 @@
 /*
- * Copyright 2019 范軒瑋, HsuanTingLu
+ * Base class of the progress bar
+ * Copyright (C) 2019  Hsuan-Ting Lu
  *
- * Created by 范軒瑋 on 2019-09-25.
- *
- * A simple progress bar that needs manual updating,
- * with dynamic window filling width control
+ * GNU General Public License v3.0+ (see LICENSE or
+ * https://www.gnu.org/licenses/)
  */
 
 #ifndef PBAR_PBAR_H
