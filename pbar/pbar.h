@@ -71,9 +71,9 @@ class ProgressBar {
    private:
     inline float percentage();
     int __digits(long long number);
-    window_width::window_width* window_width;
+    window_width::window_width* window_width;  // Functor pointer
     void moveto(const int n);
-    void fill_screen(const std::string s);
+    void fill_screen(const std::string& s);
     std::string format_meter();
     void display();
     const std::chrono::nanoseconds delta_time(
@@ -91,7 +91,6 @@ class ProgressBar {
                                                                 : true));
     ~ProgressBar();
     void update(const int n = 1);
-    void close();
 };
 
 }  // namespace pbar

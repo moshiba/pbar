@@ -45,6 +45,7 @@ ProgressBar::ProgressBar(const std::string& description, const int total,
       leave(leave),
       min_interval_time(min_interval_time),
       min_interval_iter(1),
+      bar_format(bar_format.empty() ? "{desc}: {percentage:3.2f}|{progress}| {n}/{total}" : bar_format),
       n(initial_value),
       position(position),
       last_update_n(initial_value),
@@ -53,11 +54,6 @@ ProgressBar::ProgressBar(const std::string& description, const int total,
         this->window_width = new window_width::static_window_width(width);
     } else {
         this->window_width = new window_width::dynamic_window_width();
-    }
-    if (bar_format.empty()) {
-        // use default bar
-    } else {
-        // TODO: bind bar formatting function
     }
     ProgressBar::nbars += 1;
     this->display();
@@ -72,13 +68,21 @@ ProgressBar::ProgressBar(const std::string& description, const int total,
 
 ProgressBar::~ProgressBar() {
     this->display();
-
-    /* Cleanup and if not top level, close the progressbar
+    /* Cleanup and (depends on config) close the progressbar
      */
+    // TODO: think this through
+    if (this->leave) {
+        // leave this bar as it is
+    } else {
+        this->moveto(this->position);
+        std::cout << "\r" << aesc::cursor::EL(aesc::cursor::clear::to_end);
+        this->moveto(-this->position);
+    }
     ProgressBar::nbars -= 1;
 }
 
 inline float ProgressBar::percentage() {
+    // TODO: deprecate and merge
     return static_cast<float>(this->n) / this->total * 100.0;
 }
 
@@ -111,15 +115,19 @@ void ProgressBar::moveto(const int n) {
     }
 }
 
-void ProgressBar::fill_screen(const std::string s) {
+void ProgressBar::fill_screen(const std::string& s) {
     /* Clears the entire line,
      *  resets cursor to the beginning position,
      *  then print the designated string.
      */
+    std::ios coutstate(nullptr);
+    coutstate.copyfmt(std::cout);
     std::cout << aesc::cursor::EL(aesc::cursor::clear::entire) << "\r" << s;
+    std::cout.copyfmt(coutstate);
 }
 
 std::string ProgressBar::format_meter() {
+    // TODO: doesn't support custom format yet
     /** Returns a formatted progress bar in string format
      */
     int bar_width = (*this->window_width)() - this->__digits(this->n) -
@@ -129,7 +137,7 @@ std::string ProgressBar::format_meter() {
 
     // Inject left metadata
     if (!this->description.empty()) {
-        fstring << this->description << ": ";
+        fstring << this->description + ": ";
         bar_width -= this->description.length() + 2;
     }
     fstring << std::fixed << std::setw(6) << std::setprecision(2);
@@ -164,11 +172,8 @@ void ProgressBar::display() {
         this->moveto(this->position);
     }
 
-    std::ios coutstate(nullptr);
-    coutstate.copyfmt(std::cout);
     this->fill_screen(this->format_meter());
-    // std::cout << std::flush;
-    std::cout.copyfmt(coutstate);
+    // std::cout << std::flush;  // TODO: investigate if this is needed
 
     if (this->position) {
         this->moveto(-this->position);

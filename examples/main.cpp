@@ -14,7 +14,7 @@ int main() {
     constexpr int test_size2 = 80000;
     pbar::ProgressBar* progressBar = new pbar::ProgressBar("fiiirst", test_size);
     for (int i = 0; i < test_size; i++) {
-        pbar::ProgressBar* progressBar2 = new pbar::ProgressBar("secoond", test_size2);
+        pbar::ProgressBar* progressBar2 = new pbar::ProgressBar("secoond", test_size2, true);
         for (int j = 0; j < test_size2; j++) {
             progressBar2->update();
             usleep(1);
@@ -22,8 +22,8 @@ int main() {
         delete progressBar2;
         progressBar->update();
     }
-    std::cout << std::endl;
     delete progressBar;
+    std::cout << std::endl << std::endl;
     std::cout << "test driver END" << std::endl;
 
     return 0;
