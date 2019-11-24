@@ -1,6 +1,6 @@
 add_library(progressbar SHARED)
 target_sources(progressbar
-    INTERFACE pbar.h
+    INTERFACE pbar.hpp
     PRIVATE   pbar.cpp
 )
 target_include_directories(progressbar
