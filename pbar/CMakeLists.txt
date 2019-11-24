@@ -1,20 +1,28 @@
-add_library(progressbar SHARED)
-target_sources(progressbar
-    INTERFACE pbar.hpp
-    PRIVATE   pbar.cpp
+add_library(pbar SHARED)
+target_sources(pbar
+    INTERFACE
+        ${CMAKE_CURRENT_SOURCE_DIR}/pbar.hpp
+    PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/pbar.cpp
 )
-target_include_directories(progressbar
-    PUBLIC ${PROJECT_SOURCE_DIR}
-    PRIVATE /usr/local/include
+target_include_directories(pbar
+    PUBLIC
+        ${PROJECT_SOURCE_DIR}
 )
-target_compile_features(progressbar
+target_include_directories(pbar SYSTEM
+# HACK: to find lib aesc
+    PRIVATE
+        /usr/include
+        /usr/local/include
+)
+target_compile_features(pbar
     PRIVATE
         cxx_std_11
 )
-set_target_properties(progressbar PROPERTIES
+set_target_properties(pbar PROPERTIES
     CXX_EXTENSIONS OFF
 )
-target_compile_options(progressbar
+target_compile_options(pbar
     PRIVATE
         -Wall
         -Wextra
@@ -23,5 +31,14 @@ target_compile_options(progressbar
         -Os
 )
 find_library(FIND_AESC aesc)
-message(WARNING "path: ${FIND_AESC}")
-target_link_libraries(progressbar PRIVATE ${FIND_AESC})
+message(STATUS "\"aesc\" library path: ${FIND_AESC}")
+target_link_libraries(pbar PRIVATE ${FIND_AESC})
+
+install(
+    TARGETS pbar
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}
+)
+install(
+    FILES pbar.hpp
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)

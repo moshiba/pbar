@@ -21,5 +21,5 @@ target_compile_options(driver
 )
 
 target_link_libraries(driver
-    PUBLIC progressbar
+    PUBLIC pbar
 )
