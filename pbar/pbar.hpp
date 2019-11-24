@@ -2,12 +2,12 @@
  * Base class of the progress bar
  * Copyright (C) 2019  Hsuan-Ting Lu
  *
- * GNU General Public License v3.0+ (see LICENSE or
- * https://www.gnu.org/licenses/)
+ * GNU General Public License v3.0+
+ * (see LICENSE or https://www.gnu.org/licenses/)
  */
 
-#ifndef PBAR_PBAR_H
-#define PBAR_PBAR_H
+#ifndef PBAR_PBAR_HPP_
+#define PBAR_PBAR_HPP_
 
 #include <sys/ioctl.h>
 

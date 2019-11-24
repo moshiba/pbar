@@ -2,11 +2,11 @@
  * Base class of the progress bar
  * Copyright (C) 2019  Hsuan-Ting Lu, 范軒瑋
  *
- * GNU General Public License v3.0+ (see LICENSE or
- * https://www.gnu.org/licenses/)
+ * GNU General Public License v3.0+
+ * (see LICENSE or https://www.gnu.org/licenses/)
  */
 
-#include "pbar.h"
+#include "pbar.hpp"
 
 #include <cmath>
 #include <iomanip>
@@ -45,7 +45,9 @@ ProgressBar::ProgressBar(const std::string& description, const int total,
       leave(leave),
       min_interval_time(min_interval_time),
       min_interval_iter(1),
-      bar_format(bar_format.empty() ? "{desc}: {percentage:3.2f}|{progress}| {n}/{total}" : bar_format),
+      bar_format(bar_format.empty()
+                     ? "{desc}: {percentage:3.2f}|{progress}| {n}/{total}"
+                     : bar_format),
       n(initial_value),
       position(position),
       last_update_n(initial_value),
