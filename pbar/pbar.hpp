@@ -36,7 +36,7 @@ class static_window_width final : public window_width {
     const int width;
 
    public:
-    static_window_width(const int width);
+    explicit static_window_width(const int width);
     int operator()() const final override;
 };
 
@@ -84,7 +84,7 @@ class ProgressBar {
     explicit ProgressBar(const std::string& description, const int total,
                          const bool leave, const int width,
                          const std::chrono::nanoseconds min_interval_time,
-                         const std::string bar_format, const int initial_value,
+                         const std::string& bar_format, const int initial_value,
                          const int position);
     explicit ProgressBar(const std::string& description, const int total,
                          const bool leave = (ProgressBar::nbars ? false
