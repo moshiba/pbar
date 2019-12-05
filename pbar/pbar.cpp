@@ -38,7 +38,7 @@ int dynamic_window_width::operator()() const {
 ProgressBar::ProgressBar(const std::string& description, const int total,
                          const bool leave, const int width,
                          const std::chrono::nanoseconds min_interval_time,
-                         const std::string bar_format, const int initial_value,
+                         const std::string& bar_format, const int initial_value,
                          const int position)
     : description(description),
       total(total),
@@ -81,6 +81,7 @@ ProgressBar::~ProgressBar() {
         this->moveto(-this->position);
     }
     ProgressBar::nbars -= 1;
+    delete window_width;
 }
 
 inline float ProgressBar::percentage() {
