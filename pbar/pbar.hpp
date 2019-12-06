@@ -29,6 +29,7 @@ namespace window_width {
 class window_width {
    public:
     virtual int operator()() const;
+    virtual ~window_width() {}
 };
 
 class static_window_width final : public window_width {
@@ -38,6 +39,7 @@ class static_window_width final : public window_width {
    public:
     explicit static_window_width(const int width);
     int operator()() const final override;
+    ~static_window_width();
 };
 
 class dynamic_window_width final : public window_width {
@@ -47,6 +49,7 @@ class dynamic_window_width final : public window_width {
    public:
     dynamic_window_width();
     int operator()() const final override;
+    ~dynamic_window_width();
 };
 }  // namespace window_width
 

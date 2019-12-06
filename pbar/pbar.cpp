@@ -8,11 +8,11 @@
 
 #include "pbar.hpp"
 
+#include <aesc.hpp>
 #include <cmath>
 #include <iomanip>
 #include <iostream>
 
-#include <aesc.hpp>
 #include "unistd.h"
 
 namespace pbar {
@@ -25,10 +25,12 @@ int window_width::operator()() const { return 0; }
 
 // static_window_width
 static_window_width::static_window_width(const int width) : width(width) {}
+static_window_width::~static_window_width() {}
 int static_window_width::operator()() const { return this->width; }
 
 // dynamic_window_width
 dynamic_window_width::dynamic_window_width() {}
+dynamic_window_width::~dynamic_window_width() {}
 int dynamic_window_width::operator()() const {
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &(this->window_size));
     return static_cast<int>(this->window_size.ws_col);
