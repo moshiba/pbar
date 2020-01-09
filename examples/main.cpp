@@ -15,19 +15,18 @@
 int main() {
     constexpr int test_size = 4;
     constexpr int test_size2 = 80000;
-    pbar::ProgressBar* progressBar =
-        new pbar::ProgressBar("fiiirst", test_size);
+    pbar::ProgressBar pBar("fiiirst", test_size);
+    pbar::ProgressBar pBar2("secoond", test_size2, true);
     for (int i = 0; i < test_size; i++) {
-        pbar::ProgressBar* progressBar2 =
-            new pbar::ProgressBar("secoond", test_size2, true);
+        pBar2.reset();
         for (int j = 0; j < test_size2; j++) {
-            progressBar2->update();
+            pBar2.update();
             usleep(1);
         }
-        delete progressBar2;
-        progressBar->update();
+        pBar.update();
     }
-    delete progressBar;
+    pBar2.close();
+    pBar.close();
     std::cout << std::endl << std::endl;
     std::cout << "test driver END" << std::endl;
 

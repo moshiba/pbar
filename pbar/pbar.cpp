@@ -8,11 +8,11 @@
 
 #include "pbar.hpp"
 
+#include <aesc.hpp>
 #include <cmath>
 #include <iomanip>
 #include <iostream>
 
-#include <aesc.hpp>
 #include "unistd.h"
 
 namespace pbar {
@@ -25,22 +25,25 @@ int window_width::operator()() const { return 0; }
 
 // static_window_width
 static_window_width::static_window_width(const int width) : width(width) {}
+static_window_width::~static_window_width() {}
 int static_window_width::operator()() const { return this->width; }
 
 // dynamic_window_width
 dynamic_window_width::dynamic_window_width() {}
+dynamic_window_width::~dynamic_window_width() {}
 int dynamic_window_width::operator()() const {
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &(this->window_size));
     return static_cast<int>(this->window_size.ws_col);
 }
 }  // namespace window_width
 
-ProgressBar::ProgressBar(const std::string& description, const int total,
+ProgressBar::ProgressBar(const std::string& description, const long long& total,
                          const bool leave, const int width,
                          const std::chrono::nanoseconds min_interval_time,
-                         const std::string& bar_format, const int initial_value,
-                         const int position)
-    : description(description),
+                         const std::string& bar_format,
+                         const long long& initial_value, const int position)
+    : initial_value(initial_value),
+      description(description),
       total(total),
       leave(leave),
       min_interval_time(min_interval_time),
@@ -51,7 +54,8 @@ ProgressBar::ProgressBar(const std::string& description, const int total,
       n(initial_value),
       position(position),
       last_update_n(initial_value),
-      last_update_time(std::chrono::system_clock::now()) {
+      last_update_time(std::chrono::system_clock::now()),
+      disable(false) {
     if (width > 0) {
         this->window_width = new window_width::static_window_width(width);
     } else {
@@ -61,28 +65,14 @@ ProgressBar::ProgressBar(const std::string& description, const int total,
     this->display();
 }
 
-ProgressBar::ProgressBar(const std::string& description, const int total,
+ProgressBar::ProgressBar(const std::string& description, const long long& total,
                          const bool leave)
     : ProgressBar(description, total, leave, -1,
                   std::chrono::duration_cast<std::chrono::nanoseconds>(
-                      std::chrono::milliseconds(100)),
+                      std::chrono::milliseconds(10)),
                   "", 0, ProgressBar::nbars) {}
 
-ProgressBar::~ProgressBar() {
-    this->display();
-    /* Cleanup and (depends on config) close the progressbar
-     */
-    // TODO: think this through
-    if (this->leave) {
-        // leave this bar as it is
-    } else {
-        this->moveto(this->position);
-        std::cout << "\r" << aesc::cursor::EL(aesc::cursor::clear::to_end);
-        this->moveto(-this->position);
-    }
-    ProgressBar::nbars -= 1;
-    delete window_width;
-}
+ProgressBar::~ProgressBar() { this->close(); }
 
 inline float ProgressBar::percentage() {
     // TODO: deprecate and merge
@@ -108,7 +98,7 @@ void ProgressBar::moveto(const int n) {
      */
 
     if (n > 0) {
-        // moves down
+        // moves down, needs NEWLINE to actually create and move to lines below
         for (int i = 0; i != n; ++i) {
             std::cout << "\n";
         }
@@ -171,6 +161,8 @@ std::string ProgressBar::format_meter() {
 void ProgressBar::display() {
     /** Refresh display of this bar
      */
+    const std::lock_guard<std::mutex> guard(this->pbar_mutex);
+
     if (this->position) {
         this->moveto(this->position);
     }
@@ -184,7 +176,25 @@ void ProgressBar::display() {
     std::cout << std::flush;
 }
 
+const std::chrono::nanoseconds ProgressBar::delta_time(
+    std::chrono::time_point<std::chrono::system_clock>& now) {
+    return std::chrono::duration_cast<std::chrono::nanoseconds>(
+        now - this->last_update_time);
+}
+
+inline long ProgressBar::delta_iter() {
+    return static_cast<long>(this->n - this->last_update_n);
+}
+
 void ProgressBar::update(const int n) {
+    if (this->disable) {
+        return;
+    }
+
+    // HACK: for auto-refresh logic to work
+    if (n < 0) {
+        this->last_update_n += n;
+    }
     this->n += n;
     // BUG: TODO: consider last_print_n when n < 0
 
@@ -197,24 +207,64 @@ void ProgressBar::update(const int n) {
         if (this->delta_time(now) > this->min_interval_time) {
             this->display();
 
-            // TODO: dynamic min_interval_iter adjustments
-            this->min_interval_iter = delta_iters / 3;
+            // TODO: find better dynamic min_interval_iter adjustments, might
+            // want to consider interval fluctuation Uses max number of
+            // iterations between two updates
+            this->min_interval_iter =
+                std::max(this->min_interval_iter, delta_iters);
             // TODO: how to evaluate this guess on next round
 
-            this->last_update_n = this->n;
-            this->last_update_time = std::move(now);
+            // Store old values for next call
+            {
+                std::lock_guard<std::mutex> guard(this->pbar_mutex);
+                // this->last_update_n = this->n;
+                const long long tmp = this->n.load();
+                this->last_update_n = tmp;
+
+                this->last_update_time = std::move(now);
+            }
         }
     }
 }
 
-const std::chrono::nanoseconds ProgressBar::delta_time(
-    std::chrono::time_point<std::chrono::system_clock>& now) {
-    return std::chrono::duration_cast<std::chrono::nanoseconds>(
-        now - this->last_update_time);
+void ProgressBar::close() {
+    /* Clean up visuals, closes pbar if set not to leave it
+     * then resets
+     */
+    if (this->disable) {
+        return;
+    }
+    // Prevent multiple closures
+    this->disable = true;
+
+    // Remove pbar from record
+    ProgressBar::nbars -= 1;
+    // TODO: implement internal set instead of simple counting to maintain
+    // multi-bar order
+    delete window_width;
+
+    this->display();
+    // TODO: write final stats
+
+    if (this->leave) {
+        // leave this bar as it is
+    } else {
+        // close (clean up) the pbar
+        const std::lock_guard<std::mutex> guard(this->pbar_mutex);
+
+        this->moveto(this->position);
+        std::cout << "\r" << aesc::cursor::EL(aesc::cursor::clear::to_end);
+        this->moveto(-this->position);
+    }
 }
 
-long ProgressBar::delta_iter() {
-    return static_cast<long>(this->n - this->last_update_n);
+void ProgressBar::reset() {
+    /* encourages repeated use
+     */
+    this->n = this->initial_value;
+    this->last_update_n = this->initial_value;
+    this->last_update_time = std::chrono::system_clock::now();
+    this->display();
 }
 
 }  // namespace pbar
