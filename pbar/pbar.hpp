@@ -18,12 +18,6 @@
 
 namespace pbar {
 
-class Bar {
-   public:
-    Bar();
-    void refresh();
-};
-
 namespace window_width {
 // Functor
 class window_width {
@@ -51,25 +45,30 @@ class dynamic_window_width final : public window_width {
     int operator()() const final override;
     ~dynamic_window_width();
 };
+
 }  // namespace window_width
 
 class ProgressBar {
-    /* Not copyable, but movable
+    /* TODO: Not copyable, but movable
      */
    private:
     static int nbars;  // bar count
 
+   private:  // initial values, used in reset()
+    long long initial_value;
+
    private:
-    const std::string description;
-    const long long total;
+    std::string description;
+    long long total;
     const bool leave;
     std::chrono::nanoseconds min_interval_time;
     long min_interval_iter;
-    const std::string bar_format;
+    std::string bar_format;
     long long n;
     const int position;
     long long last_update_n;
     std::chrono::system_clock::time_point last_update_time;
+    bool disable;
 
    private:
     inline float percentage();
@@ -81,19 +80,21 @@ class ProgressBar {
     void display();
     const std::chrono::nanoseconds delta_time(
         std::chrono::time_point<std::chrono::system_clock>& now);
-    long delta_iter();
+    inline long delta_iter();
 
    public:
-    explicit ProgressBar(const std::string& description, const int total,
+    explicit ProgressBar(const std::string& description, const long long& total,
                          const bool leave, const int width,
                          const std::chrono::nanoseconds min_interval_time,
-                         const std::string& bar_format, const int initial_value,
-                         const int position);
-    explicit ProgressBar(const std::string& description, const int total,
+                         const std::string& bar_format,
+                         const long long& initial_value, const int position);
+    explicit ProgressBar(const std::string& description, const long long& total,
                          const bool leave = (ProgressBar::nbars ? false
                                                                 : true));
     ~ProgressBar();
     void update(const int n = 1);
+    void close();
+    void reset();
 };
 
 }  // namespace pbar
