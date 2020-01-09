@@ -11,7 +11,9 @@
 
 #include <sys/ioctl.h>
 
+#include <atomic>
 #include <chrono>
+#include <mutex>
 #include <ratio>
 #include <sstream>
 #include <string>
@@ -64,11 +66,12 @@ class ProgressBar {
     std::chrono::nanoseconds min_interval_time;
     long min_interval_iter;
     std::string bar_format;
-    long long n;
+    std::atomic<long long> n;
     const int position;
-    long long last_update_n;
+    std::atomic<long long> last_update_n;
     std::chrono::system_clock::time_point last_update_time;
     bool disable;
+    std::mutex pbar_mutex;
 
    private:
     inline float percentage();

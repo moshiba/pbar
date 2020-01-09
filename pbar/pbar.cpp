@@ -161,6 +161,8 @@ std::string ProgressBar::format_meter() {
 void ProgressBar::display() {
     /** Refresh display of this bar
      */
+    const std::lock_guard<std::mutex> guard(this->pbar_mutex);
+
     if (this->position) {
         this->moveto(this->position);
     }
@@ -213,8 +215,14 @@ void ProgressBar::update(const int n) {
             // TODO: how to evaluate this guess on next round
 
             // Store old values for next call
-            this->last_update_n = this->n;
-            this->last_update_time = std::move(now);
+            {
+                std::lock_guard<std::mutex> guard(this->pbar_mutex);
+                // this->last_update_n = this->n;
+                const long long tmp = this->n.load();
+                this->last_update_n = tmp;
+
+                this->last_update_time = std::move(now);
+            }
         }
     }
 }
@@ -242,6 +250,8 @@ void ProgressBar::close() {
         // leave this bar as it is
     } else {
         // close (clean up) the pbar
+        const std::lock_guard<std::mutex> guard(this->pbar_mutex);
+
         this->moveto(this->position);
         std::cout << "\r" << aesc::cursor::EL(aesc::cursor::clear::to_end);
         this->moveto(-this->position);
