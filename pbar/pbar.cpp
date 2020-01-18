@@ -9,6 +9,7 @@
 #include "pbar.hpp"
 
 #include <aesc.hpp>
+#include <algorithm>
 #include <iomanip>
 #include <iostream>
 
@@ -16,7 +17,14 @@
 
 namespace pbar {
 
-int ProgressBar::nbars = 0;
+std::mutex ProgressBar::class_mutex;
+std::vector<ProgressBar*> ProgressBar::bar_registry;
+
+void ProgressBar::update_positions() {
+    for (unsigned int i = 0; i != ProgressBar::bar_registry.size(); ++i) {
+        ProgressBar::bar_registry[i]->position = i;
+    }
+}
 
 namespace window_width {
 // window_width
@@ -60,7 +68,14 @@ ProgressBar::ProgressBar(const std::string& description, const long long& total,
     } else {
         this->window_width = new window_width::dynamic_window_width();
     }
-    ProgressBar::nbars += 1;
+
+    {
+        std::lock_guard<std::mutex> guard(ProgressBar::class_mutex);
+        ProgressBar::bar_registry.emplace(
+            ProgressBar::bar_registry.begin() + position, this);
+        ProgressBar::update_positions();
+    }
+
     this->display();
 }
 
@@ -69,7 +84,7 @@ ProgressBar::ProgressBar(const std::string& description, const long long& total,
     : ProgressBar(description, total, leave, -1,
                   std::chrono::duration_cast<std::chrono::nanoseconds>(
                       std::chrono::milliseconds(10)),
-                  "", 0, ProgressBar::nbars) {}
+                  "", 0, ProgressBar::bar_registry.size()) {}
 
 ProgressBar::~ProgressBar() { this->close(); }
 
@@ -236,8 +251,10 @@ void ProgressBar::close() {
     this->disable = true;
 
     // Remove pbar from record
-    ProgressBar::nbars -= 1;
-    // TODO: implement internal set instead of simple counting to maintain
+    ProgressBar::bar_registry.erase(std::find(ProgressBar::bar_registry.begin(),
+                                              ProgressBar::bar_registry.end(),
+                                              this));
+    // TODO: WIP: implement internal set instead of simple counting to maintain
     // multi-bar order
     delete window_width;
 
