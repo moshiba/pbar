@@ -9,7 +9,6 @@
 #include "pbar.hpp"
 
 #include <aesc.hpp>
-#include <cmath>
 #include <iomanip>
 #include <iostream>
 
@@ -139,7 +138,7 @@ std::string ProgressBar::format_meter() {
 
     // Inject running-bar
     int processed =
-        round(bar_width * this->n / static_cast<float>(this->total));
+        bar_width * this->n / this->total;
     int remaining = bar_width - processed;
 
     if (bar_width > 0) {
