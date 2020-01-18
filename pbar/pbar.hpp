@@ -17,6 +17,7 @@
 #include <ratio>
 #include <sstream>
 #include <string>
+#include <vector>
 
 namespace pbar {
 
@@ -53,13 +54,15 @@ class dynamic_window_width final : public window_width {
 class ProgressBar {
     /* TODO: Not copyable, but movable
      */
-   private:
-    static int nbars;  // bar count
+   private:  // class-wise stuff
+    static std::mutex class_mutex;
+    static std::vector<ProgressBar*> bar_registry;
+    static void update_positions();
 
    private:  // initial values, used in reset()
     long long initial_value;
 
-   private:
+   private:  // internal data
     std::string description;
     long long total;
     const bool leave;
@@ -67,13 +70,13 @@ class ProgressBar {
     long min_interval_iter;
     std::string bar_format;
     std::atomic<long long> n;
-    const int position;
+    int position;
     std::atomic<long long> last_update_n;
     std::chrono::system_clock::time_point last_update_time;
     bool disable;
     std::mutex pbar_mutex;
 
-   private:
+   private:  // internal functions
     inline float percentage();
     int __digits(long long number);
     window_width::window_width* window_width;  // Functor pointer
@@ -92,12 +95,19 @@ class ProgressBar {
                          const std::string& bar_format,
                          const long long& initial_value, const int position);
     explicit ProgressBar(const std::string& description, const long long& total,
-                         const bool leave = (ProgressBar::nbars ? false
-                                                                : true));
+                         const bool leave = (ProgressBar::bar_registry.empty()
+                                                 ? true
+                                                 : false));
     ~ProgressBar();
     void update(const int n = 1);
     void close();
     void reset();
+
+    ProgressBar& operator+=(const int n);
+    ProgressBar& operator-=(const int n);
+    // prefix
+    ProgressBar& operator++();
+    ProgressBar& operator--();
 };
 
 }  // namespace pbar
