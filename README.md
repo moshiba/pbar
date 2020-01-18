@@ -4,6 +4,8 @@
 
 Low overhead C++ progress bar with a friendly interface
 
+![runtime-demo-GIF](docs/img/runtime_demo.gif)
+
 ## Table of Contents
 - [Quickstart](#quickstart)
 - [Install](#install)
