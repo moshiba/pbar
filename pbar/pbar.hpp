@@ -98,6 +98,12 @@ class ProgressBar {
     void update(const int n = 1);
     void close();
     void reset();
+
+    ProgressBar& operator+=(const int n);
+    ProgressBar& operator-=(const int n);
+    // prefix
+    ProgressBar& operator++();
+    ProgressBar& operator--();
 };
 
 }  // namespace pbar

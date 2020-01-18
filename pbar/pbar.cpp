@@ -137,8 +137,7 @@ std::string ProgressBar::format_meter() {
             << aesc::render::reset;
 
     // Inject running-bar
-    int processed =
-        bar_width * this->n / this->total;
+    int processed = bar_width * this->n / this->total;
     int remaining = bar_width - processed;
 
     if (bar_width > 0) {
@@ -264,6 +263,28 @@ void ProgressBar::reset() {
     this->last_update_n = this->initial_value;
     this->last_update_time = std::chrono::system_clock::now();
     this->display();
+}
+
+ProgressBar& ProgressBar::operator+=(const int n) {
+    this->update(n);
+    return *this;
+}
+
+ProgressBar& ProgressBar::operator-=(const int n) {
+    this->update(-n);
+    return *this;
+}
+
+// prefix
+ProgressBar& ProgressBar::operator++() {
+    this->update(1);
+    return *this;
+}
+
+// prefix
+ProgressBar& ProgressBar::operator--() {
+    this->update(-1);
+    return *this;
 }
 
 }  // namespace pbar
