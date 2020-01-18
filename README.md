@@ -6,8 +6,7 @@ Low overhead C++ progress bar with a friendly interface
 
 ## Table of Contents
 - [Quickstart](#quickstart)
-- [Requirements](#requirements)
-- [Build](#build)
+- [Install](#install)
 
 <a name="quickstart"></a>
 ## Quickstart
@@ -17,7 +16,7 @@ with a simple constructor `ProgressBar(${description}, ${total})` and you're rea
 
 Updating the bar is as easy as the construction process, `update(${number})` increases/decreases the bar to whatever number you want.
 
-there are example codes in the `examples/` directory, see [Build](#build) for more information.
+there are example codes in the `examples/` directory, see [Install](#install) for more information.
 
 ### Simple example
 ```cpp
@@ -51,17 +50,15 @@ int main() {
 }
 ```
 
-<a name="requirements"></a>
-## Requirements
+<a name="install"></a>
+## Install
+CMake is the official build system.
+
+### Requirements
 
 - C++11 or higher
 - [Ansi-Escape](https://github.com/HsuanTingLu/ansi-escape) library for terminal render control
 - CMake 3.5 or higher
-
-<a name="build"></a>
-## Build
-CMake is the official build system.
-At least version 3.5 is needed.
 
 ```bash
 mkdir build; cd build/
