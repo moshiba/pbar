@@ -25,24 +25,6 @@ void ProgressBar::update_positions() {
     }
 }
 
-namespace window_width {
-// window_width
-int window_width::operator()() const { return 0; }
-
-// static_window_width
-static_window_width::static_window_width(const int width) : width(width) {}
-static_window_width::~static_window_width() {}
-int static_window_width::operator()() const { return this->width; }
-
-// dynamic_window_width
-dynamic_window_width::dynamic_window_width() {}
-dynamic_window_width::~dynamic_window_width() {}
-int dynamic_window_width::operator()() const {
-    ioctl(STDOUT_FILENO, TIOCGWINSZ, &(this->window_size));
-    return static_cast<int>(this->window_size.ws_col);
-}
-}  // namespace window_width
-
 ProgressBar::ProgressBar(const std::string& description, const long long& total,
                          const bool leave, const int width,
                          const std::chrono::nanoseconds min_interval_time,
@@ -63,9 +45,14 @@ ProgressBar::ProgressBar(const std::string& description, const long long& total,
       last_update_time(std::chrono::system_clock::now()),
       disable(false) {
     if (width > 0) {
-        this->window_width = new window_width::static_window_width(width);
+        this->window_width = [width]() -> int { return width; };
     } else {
-        this->window_width = new window_width::dynamic_window_width();
+        this->window_width = []() -> int {
+            winsize
+                window_size;  // TODO: save this reallocation, hide it in class
+            ioctl(STDERR_FILENO, TIOCGWINSZ, &window_size);
+            return static_cast<int>(window_size.ws_col);
+        };
     }
 
     {
@@ -136,7 +123,9 @@ std::string ProgressBar::format_meter() {
     // TODO: doesn't support custom format yet
     /** Returns a formatted progress bar in string format
      */
-    int bar_width = (*this->window_width)() - this->__digits(this->n) -
+    // TODO: add another function to pre-format some parts upon "description"
+    // change can achieve custom format while keeping efficiency
+    int bar_width = this->window_width() - this->__digits(this->n) -
                     this->__digits(this->total) - 12;
     std::ostringstream fstring;
     fstring << "\033[0m";
@@ -259,7 +248,7 @@ void ProgressBar::close() {
                                               this));
     // TODO: WIP: implement internal set instead of simple counting to maintain
     // multi-bar order
-    delete window_width;
+    // delete window_width; TODO: FIXME
 
     this->display();
     // TODO: write final stats

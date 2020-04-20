@@ -13,6 +13,7 @@
 
 #include <atomic>
 #include <chrono>
+#include <functional>
 #include <mutex>
 #include <ratio>
 #include <sstream>
@@ -21,35 +22,6 @@
 
 namespace pbar {
 
-namespace window_width {
-// Functor
-class window_width {
-   public:
-    virtual int operator()() const;
-    virtual ~window_width() {}
-};
-
-class static_window_width final : public window_width {
-   private:
-    const int width;
-
-   public:
-    explicit static_window_width(const int width);
-    int operator()() const final override;
-    ~static_window_width();
-};
-
-class dynamic_window_width final : public window_width {
-   private:
-    winsize window_size;
-
-   public:
-    dynamic_window_width();
-    int operator()() const final override;
-    ~dynamic_window_width();
-};
-
-}  // namespace window_width
 
 class ProgressBar {
     /* TODO: Not copyable, but movable
@@ -79,7 +51,7 @@ class ProgressBar {
    private:  // internal functions
     inline float percentage();
     int __digits(long long number);
-    window_width::window_width* window_width;  // Functor pointer
+    std::function<unsigned int()> window_width;
     void moveto(const int n);
     void fill_screen(const std::string& s);
     std::string format_meter();
