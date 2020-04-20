@@ -20,5 +20,3 @@ include(GNUInstallDirs)
 add_subdirectory(pbar)
 add_subdirectory(examples EXCLUDE_FROM_ALL)
 
-#add_subdirectory(external)
-#target_link_libraries(${PROJECT_NAME} ansi-escape::aesc)

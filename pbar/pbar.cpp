@@ -8,12 +8,11 @@
 
 #include "pbar.hpp"
 
-#include <aesc.hpp>
+#include <unistd.h>
+
 #include <algorithm>
 #include <iomanip>
 #include <iostream>
-
-#include "unistd.h"
 
 namespace pbar {
 
@@ -118,7 +117,7 @@ void ProgressBar::moveto(const int n) {
         }
     } else {
         // moves up
-        std::cout << aesc::cursor::up(-n);
+        std::cout << "\033[" << -n << "A";
     }
 }
 
@@ -129,7 +128,7 @@ void ProgressBar::fill_screen(const std::string& s) {
      */
     std::ios coutstate(nullptr);
     coutstate.copyfmt(std::cout);
-    std::cout << aesc::cursor::EL(aesc::cursor::clear::entire) << "\r" << s;
+    std::cout << "\033[2K\r" << s;
     std::cout.copyfmt(coutstate);
 }
 
@@ -140,7 +139,7 @@ std::string ProgressBar::format_meter() {
     int bar_width = (*this->window_width)() - this->__digits(this->n) -
                     this->__digits(this->total) - 12;
     std::ostringstream fstring;
-    fstring << aesc::render::reset;
+    fstring << "\033[0m";
 
     // Inject left metadata
     if (!this->description.empty()) {
@@ -148,8 +147,10 @@ std::string ProgressBar::format_meter() {
         bar_width -= this->description.length() + 2;
     }
     fstring << std::fixed << std::setw(6) << std::setprecision(2);
-    fstring << this->percentage() << "%" << aesc::color::red << "|"
-            << aesc::render::reset;
+    fstring << this->percentage() << "%"
+            << "\033[31m"
+            << "|"
+            << "\033[0m";
 
     // Inject running-bar
     int processed = bar_width * this->n / this->total;
@@ -165,8 +166,10 @@ std::string ProgressBar::format_meter() {
     }
 
     // Inject right metadata
-    fstring << aesc::color::red << "|" << aesc::render::reset << " " << this->n
-            << "/" << this->total << " ";
+    fstring << "\033[31m"
+            << "|"
+            << "\033[0m"
+            << " " << this->n << "/" << this->total << " ";
 
     return fstring.str();
 }
@@ -268,7 +271,8 @@ void ProgressBar::close() {
         const std::lock_guard<std::mutex> guard(this->pbar_mutex);
 
         this->moveto(this->position);
-        std::cout << "\r" << aesc::cursor::EL(aesc::cursor::clear::to_end);
+        std::cout << "\r"
+                  << "\033[0K";
         this->moveto(-this->position);
     }
 }

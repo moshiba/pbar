@@ -9,12 +9,6 @@ target_include_directories(pbar
     PUBLIC
         ${PROJECT_SOURCE_DIR}
 )
-target_include_directories(pbar SYSTEM
-# HACK: to find lib aesc
-    PRIVATE
-        /usr/include
-        /usr/local/include
-)
 target_compile_features(pbar
     PRIVATE
         cxx_std_11
@@ -30,9 +24,6 @@ target_compile_options(pbar
         #-Werror
         -Os
 )
-find_library(FIND_AESC aesc)
-message(STATUS "\"aesc\" library path: ${FIND_AESC}")
-target_link_libraries(pbar PRIVATE ${FIND_AESC})
 
 install(
     TARGETS pbar
